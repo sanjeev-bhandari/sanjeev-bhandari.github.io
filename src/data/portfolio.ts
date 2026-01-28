@@ -159,6 +159,22 @@ export const BLOG_POSTS: BlogPost[] = [
         readTime: "4 min read",
         tags: ["C Programming", "Raylib", "Graphics Programming", "Fractals", "Recursive Algorithms"],
         url: "https://medium.com/@sanjeev-bhandari/creating-the-snowflake-in-c-using-raylib-07a0c4fa5e17"
+    },
+    {
+        title: "Understanding Edge Detection: A Mathematical Approach in Computer Vision",
+        excerpt: "Delve into the fundamental role of edge detection in identifying boundaries in images, exploring mathematical gradients and pixel intensity changes.",
+        date: "Jun 19, 2025",
+        readTime: "6 min read",
+        tags: ["Computer Vision", "Mathematics", "Edge Detection", "Image Processing"],
+        url: "https://medium.com/@sanjeev-bhandari/understanding-edge-detection-a-mathematical-approach-in-computer-vision-9154407886a1"
+    },
+    {
+        title: "A Simple Introduction to Structural Similarity Index(SSIM)",
+        excerpt: "Explore SSIM as a perceptual metric for measuring image similarity, focusing on luminance, contrast, and structural information beyond individual pixels.",
+        date: "Jan 11, 2026",
+        readTime: "6 min read",
+        tags: ["Image Quality", "SSIM", "Computer Vision", "Perceptual Metrics"],
+        url: "https://medium.com/@sanjeev-bhandari/a-simple-introduction-to-structural-similarity-index-ssim-20092c4cd547"
     }
 ];
 

@@ -5,6 +5,7 @@ import { FiMail } from 'react-icons/fi';
 import HeroBackground from '@/components/ui/HeroBackground';
 import Magnetic from '@/components/ui/Magnetic';
 import RevealText from '@/components/ui/RevealText';
+import ParallaxContent from '@/components/ui/ParallaxContent';
 
 // You can swap this placeholder filename for any other from the provided placeholder list.
 const heroImageUrl = "hero-image.png";
@@ -13,7 +14,7 @@ const Hero = () => {
   return (
     <section className="relative min-h-[85vh] flex items-center justify-center bg-linear-to-br from-slate-50 to-white border-b border-gray-200 overflow-hidden">
       <HeroBackground />
-      <div className="relative z-10 max-w-5xl mx-auto px-6 text-center pt-32 pb-20">
+      <ParallaxContent speed={0.2} className="relative z-10 max-w-5xl mx-auto px-6 text-center pt-32 pb-20">
         <div className="mb-12 flex justify-center">
           <div className="relative group">
             <img
@@ -26,7 +27,7 @@ const Hero = () => {
             <div className="absolute inset-0 rounded-xl bg-linear-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           </div>
         </div>
-        <h1 className="text-5xl font-extrabold text-gray-900 mb-4 tracking-tight leading-tight font-serif">
+        <h1 className="display-text text-gray-900 mb-6 font-serif">
           <RevealText text="Sanjeev Bhandari" />
         </h1>
         <h2 className="text-2xl text-gray-600 mb-8 font-light italic">
@@ -53,7 +54,7 @@ const Hero = () => {
             </a>
           </Magnetic>
         </div>
-      </div>
+      </ParallaxContent>
     </section>
   );
 };

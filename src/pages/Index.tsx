@@ -10,6 +10,8 @@ import Contact from '@/components/Contact';
 import { RevealOnScroll } from "@/components/ui/reveal-on-scroll";
 import MouseGlow from '@/components/ui/MouseGlow';
 import CustomCursor from '@/components/ui/CustomCursor';
+import BackgroundMesh from '@/components/ui/BackgroundMesh';
+import Footer from '@/components/Footer';
 
 const Index = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -26,11 +28,12 @@ const Index = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-transparent relative">
       <div
         className="fixed top-0 left-0 h-1 bg-blue-600 z-[100] transition-all duration-200"
         style={{ width: `${scrollProgress}%` }}
       />
+      <BackgroundMesh />
       <CustomCursor />
       <MouseGlow />
       <Navigation />
@@ -67,6 +70,7 @@ const Index = () => {
           <Contact />
         </RevealOnScroll>
       </div>
+      <Footer />
     </div>
   );
 };

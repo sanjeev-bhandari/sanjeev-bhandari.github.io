@@ -20,7 +20,7 @@ const Blog = () => {
 
         <div className="grid md:grid-cols-2 gap-8">
           {blogPosts.map((post, index) => (
-            <TiltCard key={index} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+            <TiltCard key={index} className="glass-card overflow-hidden">
               <div className="p-6">
                 <div className="flex items-center text-sm text-gray-500 mb-3">
                   <span>{post.date}</span>

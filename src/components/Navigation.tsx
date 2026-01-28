@@ -16,7 +16,7 @@ const Navigation = () => {
   ];
 
   return (
-    <nav className="fixed top-0 w-full bg-white/95 backdrop-blur-xs border-b border-gray-200 z-50">
+    <nav className="fixed top-0 w-full glass-effect z-50">
       <div className="max-w-6xl mx-auto px-6">
         <div className="flex items-center justify-between h-16">
           <Magnetic amount={0.1}>
