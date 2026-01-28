@@ -2,6 +2,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { FiLink } from 'react-icons/fi';
 import { BLOG_POSTS } from '@/data/portfolio';
+import TiltCard from '@/components/ui/TiltCard';
 
 const Blog = () => {
   const blogPosts = BLOG_POSTS;
@@ -19,7 +20,7 @@ const Blog = () => {
 
         <div className="grid md:grid-cols-2 gap-8">
           {blogPosts.map((post, index) => (
-            <article key={index} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+            <TiltCard key={index} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
               <div className="p-6">
                 <div className="flex items-center text-sm text-gray-500 mb-3">
                   <span>{post.date}</span>
@@ -57,7 +58,7 @@ const Blog = () => {
                   </Button>
                 </a>
               </div>
-            </article>
+            </TiltCard>
           ))}
         </div>
 
