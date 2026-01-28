@@ -9,7 +9,7 @@ const repoName = "realsanjeev.github.io"
 export default defineConfig(({ mode }) => ({
   // NOTE(sanjeev): When deploying a repository other than `{github-username}.github.io`, explicitly define the base URL using the repository name.
   // base: `/${repoName}/`,
-  base: ``,
+  base: "/",
   server: {
     host: "::",
     port: 8080,
