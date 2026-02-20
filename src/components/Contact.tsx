@@ -1,12 +1,17 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
+import emailjs from '@emailjs/browser';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { FiMail, FiSend } from 'react-icons/fi';
+import { FiMail, FiSend, FiCheck, FiAlertCircle } from 'react-icons/fi';
 import { SiHuggingface } from 'react-icons/si';
 import { FaGithub, FaLinkedinIn } from 'react-icons/fa6';
 import Magnetic from './ui/Magnetic';
 
 const Contact = () => {
+  const formRef = useRef<HTMLFormElement>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+
   const contactInfo = [
     { 
       icon: <FiMail />, 
@@ -40,6 +45,37 @@ const Contact = () => {
     'Speaking opportunities',
     'Open source contributions'
   ];
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!formRef.current) return;
+    
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+
+    try {
+      await emailjs.sendForm(
+        'service_nd0zt7r',
+        'template_vkwj1lg',
+        formRef.current,
+        'OxlXGe3l5tJzOb7tC'
+      );
+      
+      setSubmitStatus('success');
+      formRef.current.reset();
+    } catch (error) {
+      console.error('EmailJS error:', error);
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
+      
+      // Reset status after 5 seconds
+      setTimeout(() => {
+        setSubmitStatus('idle');
+      }, 5000);
+    }
+  };
 
   return (
     <section className="section-padding bg-white relative overflow-hidden" id="contact">
@@ -112,21 +148,40 @@ const Contact = () => {
             <div className="gradient-card rounded-2xl p-6 md:p-8 shadow-xl border-gradient">
               <h3 className="text-lg font-bold text-gray-900 mb-6 text-center lg:text-left">Send a Message</h3>
               
-              <form className="space-y-5">
+              {/* Status Messages */}
+              {submitStatus === 'success' && (
+                <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl flex items-center gap-3 text-green-700">
+                  <FiCheck className="w-5 h-5 flex-shrink-0" />
+                  <span>Message sent successfully! I'll get back to you soon.</span>
+                </div>
+              )}
+              
+              {submitStatus === 'error' && (
+                <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-3 text-red-700">
+                  <FiAlertCircle className="w-5 h-5 flex-shrink-0" />
+                  <span>Failed to send message. Please try again or email me directly.</span>
+                </div>
+              )}
+              
+              <form ref={formRef} onSubmit={handleSubmit} className="space-y-5">
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Name</label>
                     <Input
+                      name="name"
                       placeholder="Your name"
                       className="h-12 bg-gray-50/50 border-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-xl"
+                      required
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
                     <Input
                       type="email"
+                      name="email"
                       placeholder="your@email.com"
                       className="h-12 bg-gray-50/50 border-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-xl"
+                      required
                     />
                   </div>
                 </div>
@@ -134,6 +189,7 @@ const Contact = () => {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Subject</label>
                   <Input
+                    name="subject"
                     placeholder="What's this about?"
                     className="h-12 bg-gray-50/50 border-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-xl"
                   />
@@ -142,17 +198,35 @@ const Contact = () => {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Message</label>
                   <textarea
+                    name="message"
                     placeholder="Tell me about your project or inquiry..."
                     rows={5}
                     className="w-full px-4 py-3 bg-gray-50/50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all resize-none"
+                    required
                   />
                 </div>
                 
                 <div className="pt-2">
                   <Magnetic amount={0.1}>
-                    <Button className="w-full sm:w-auto px-8 h-12 bg-gray-900 hover:bg-gray-800 text-white rounded-full font-medium shadow-lg shadow-gray-900/10 hover:shadow-gray-900/20 transition-all duration-300 hover:-translate-y-0.5">
-                      <FiSend className="mr-2 h-4 w-4" />
-                      Send Message
+                    <Button 
+                      type="submit" 
+                      disabled={isSubmitting}
+                      className="w-full sm:w-auto px-8 h-12 bg-gray-900 hover:bg-gray-800 text-white rounded-full font-medium shadow-lg shadow-gray-900/10 hover:shadow-gray-900/20 transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                          Sending...
+                        </>
+                      ) : (
+                        <>
+                          <FiSend className="mr-2 h-4 w-4" />
+                          Send Message
+                        </>
+                      )}
                     </Button>
                   </Magnetic>
                 </div>
