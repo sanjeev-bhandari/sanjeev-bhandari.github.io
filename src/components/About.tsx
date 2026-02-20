@@ -54,7 +54,7 @@ const About = () => {
               {[
                 { value: '3+', label: 'Years Exp.' },
                 { value: '10+', label: 'Projects' },
-                { value: '5+', label: 'Papers' },
+                // { value: '5+', label: 'Papers' },
                 { value: '∞', label: 'Curiosity' },
               ].map((stat, i) => (
                 <div 

@@ -28,10 +28,10 @@ const Hero = () => {
               <span className="block text-gray-500 text-lg md:text-xl font-medium mb-3 tracking-wide">
                 Hello, I'm
               </span>
-              <span className="display-text">
+              <span className="block text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.9] text-gray-900">
                 <RevealText text="Sanjeev" />
               </span>
-              <span className="block display-text mt-1">
+              <span className="block text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.9] text-gray-900 mt-1">
                 <RevealText text="Bhandari" delay={150} />
               </span>
             </h1>
@@ -76,7 +76,7 @@ const Hero = () => {
               {[
                 { value: '3+', label: 'Years Experience' },
                 { value: '10+', label: 'Projects' },
-                { value: '5+', label: 'Publications' },
+                // { value: '5+', label: 'Publications' },
               ].map((stat, i) => (
                 <div key={i} className="text-center lg:text-left">
                   <div className="text-2xl md:text-3xl font-bold text-gray-900">{stat.value}</div>
