@@ -5,7 +5,6 @@ import About from '@/components/About';
 import Experience from '@/components/Experience';
 import Projects from '@/components/Projects';
 import Blog from '@/components/Blog';
-import Publications from '@/components/Publications';
 import Contact from '@/components/Contact';
 import { RevealOnScroll } from "@/components/ui/reveal-on-scroll";
 import MouseGlow from '@/components/ui/MouseGlow';
@@ -28,48 +27,55 @@ const Index = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-transparent relative">
+    <div className="min-h-screen bg-transparent relative scroll-snap-container">
+      {/* Modern scroll progress indicator */}
       <div
-        className="fixed top-0 left-0 h-1 bg-blue-600 z-[100] transition-all duration-200"
-        style={{ width: `${scrollProgress}%` }}
+        className="fixed top-0 left-0 h-0.5 z-[100] transition-all duration-150 ease-out"
+        style={{ 
+          width: `${scrollProgress}%`,
+          background: 'linear-gradient(90deg, #6366f1, #a855f7, #ec4899)'
+        }}
       />
+      
       <BackgroundMesh />
       <CustomCursor />
       <MouseGlow />
       <Navigation />
-      <RevealOnScroll>
+      
+      <main>
         <Hero />
-      </RevealOnScroll>
-      <div id="about">
-        <RevealOnScroll delay={100}>
-          <About />
-        </RevealOnScroll>
-      </div>
-      <div id="experience">
-        <RevealOnScroll delay={100}>
-          <Experience />
-        </RevealOnScroll>
-      </div>
-      <div id="projects">
-        <RevealOnScroll delay={100}>
-          <Projects />
-        </RevealOnScroll>
-      </div>
-      {/* <div id="publications">
-        <RevealOnScroll delay={100}>
-          <Publications />
-        </RevealOnScroll>
-      </div> */}
-      <div id="blog">
-        <RevealOnScroll delay={100}>
-          <Blog />
-        </RevealOnScroll>
-      </div>
-      <div id="contact">
-        <RevealOnScroll delay={100}>
-          <Contact />
-        </RevealOnScroll>
-      </div>
+        
+        <div id="about" className="scroll-snap-item">
+          <RevealOnScroll delay={100}>
+            <About />
+          </RevealOnScroll>
+        </div>
+        
+        <div id="experience" className="scroll-snap-item">
+          <RevealOnScroll delay={100}>
+            <Experience />
+          </RevealOnScroll>
+        </div>
+        
+        <div id="projects" className="scroll-snap-item">
+          <RevealOnScroll delay={100}>
+            <Projects />
+          </RevealOnScroll>
+        </div>
+        
+        <div id="blog" className="scroll-snap-item">
+          <RevealOnScroll delay={100}>
+            <Blog />
+          </RevealOnScroll>
+        </div>
+        
+        <div id="contact" className="scroll-snap-item">
+          <RevealOnScroll delay={100}>
+            <Contact />
+          </RevealOnScroll>
+        </div>
+      </main>
+      
       <Footer />
     </div>
   );
