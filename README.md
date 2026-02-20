@@ -11,6 +11,7 @@ This is my personal portfolio built with **Vite**, **React**, and **TypeScript**
 To deploy your Vite project to GitHub Pages, follow these steps:
 
 ### 1. Build the Production App
+**NOTE:**: Create a .env file in your root directory and fill is as .env.example from EmailJS to setup working contact form which sends message directly to your mail.
 
 Run the build command to generate the static files:
 
