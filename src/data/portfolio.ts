@@ -116,6 +116,16 @@ export const GITHUB_PROJECTS: Project[] = [
         url: "https://github.com/realsanjeev/Object-Detection-using-OpenCV",
     },
     {
+        name: "SAM2 Video Segmentation GUI",
+        description: "A graphical interface for video segmentation powered by the SAM 2.1 model.",
+        url: "https://github.com/realsanjeev/sam2-gui"
+    },
+    {
+        name: "Japanese Handwriting OCR",
+        description: "A modular and reliable OCR system designed to recognize Japanese handwritten text.",
+        url: "https://github.com/realsanjeev/Japanese-Handwriting-OCR"
+    },
+    {
         name: "Real-Time Whisper Transcription",
         description: "A real-time transcription app powered by Whisper, useful for generating subtitles for live video content.",
         url: "https://github.com/realsanjeev/whisper-realtime-transcriber",
