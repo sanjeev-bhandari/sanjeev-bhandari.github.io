@@ -1,62 +1,59 @@
-
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const CustomCursor = () => {
-    const cursorRef = useRef<HTMLDivElement>(null);
-    const [isHovering, setIsHovering] = useState(false);
-    const [position, setPosition] = useState({ x: 0, y: 0 });
-    const [isActive, setIsActive] = useState(false);
+  const [pos, setPos] = useState({ x: -100, y: -100 });
+  const [isHovering, setIsHovering] = useState(false);
+  const [isClicking, setIsClicking] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
-    useEffect(() => {
-        const onMouseMove = (e: MouseEvent) => {
-            setPosition({ x: e.clientX, y: e.clientY });
-        };
+  useEffect(() => {
+    if (window.matchMedia('(pointer: coarse)').matches) {
+      setIsMobile(true);
+      return;
+    }
 
-        const onMouseDown = () => setIsActive(true);
-        const onMouseUp = () => setIsActive(false);
+    const move = (e: MouseEvent) => setPos({ x: e.clientX, y: e.clientY });
+    const down = () => setIsClicking(true);
+    const up = () => setIsClicking(false);
+    const over = (e: MouseEvent) => {
+      const t = e.target as HTMLElement;
+      setIsHovering(!!(t.tagName === 'A' || t.tagName === 'BUTTON' || t.closest('a') || t.closest('button') || t.classList.contains('cursor-pointer')));
+    };
 
-        const onMouseOver = (e: MouseEvent) => {
-            const target = e.target as HTMLElement;
-            if (
-                target.tagName === 'A' ||
-                target.tagName === 'BUTTON' ||
-                target.closest('button') ||
-                target.closest('a') ||
-                target.classList.contains('cursor-pointer')
-            ) {
-                setIsHovering(true);
-            } else {
-                setIsHovering(false);
-            }
-        };
+    window.addEventListener('mousemove', move);
+    window.addEventListener('mousedown', down);
+    window.addEventListener('mouseup', up);
+    window.addEventListener('mouseover', over);
+    return () => {
+      window.removeEventListener('mousemove', move);
+      window.removeEventListener('mousedown', down);
+      window.removeEventListener('mouseup', up);
+      window.removeEventListener('mouseover', over);
+    };
+  }, []);
 
-        window.addEventListener('mousemove', onMouseMove);
-        window.addEventListener('mousedown', onMouseDown);
-        window.addEventListener('mouseup', onMouseUp);
-        window.addEventListener('mouseover', onMouseOver);
+  if (isMobile) return null;
 
-        return () => {
-            window.removeEventListener('mousemove', onMouseMove);
-            window.removeEventListener('mousedown', onMouseDown);
-            window.removeEventListener('mouseup', onMouseUp);
-            window.removeEventListener('mouseover', onMouseOver);
-        };
-    }, []);
-
-    return (
-        <div
-            ref={cursorRef}
-            className={`fixed top-0 left-0 w-8 h-8 rounded-full border-2 border-primary pointer-events-none z-[9999] mix-blend-difference transition-transform duration-200 ease-out flex items-center justify-center
-        ${isHovering ? 'scale-150 bg-primary/20' : 'scale-100'}
-        ${isActive ? 'scale-90' : ''}
-      `}
-            style={{
-                transform: `translate3d(${position.x - 16}px, ${position.y - 16}px, 0) scale(${isActive ? 0.9 : (isHovering ? 1.5 : 1)})`,
-            }}
-        >
-            <div className={`w-1 h-1 bg-primary rounded-full transition-opacity duration-200 ${isHovering ? 'opacity-0' : 'opacity-100'}`} />
-        </div>
-    );
+  return (
+    <>
+      {/* Dot */}
+      <div
+        className="fixed top-0 left-0 w-2 h-2 bg-violet-500 rounded-full pointer-events-none z-[9999] transition-transform duration-75"
+        style={{ transform: `translate3d(${pos.x - 4}px, ${pos.y - 4}px, 0)` }}
+      />
+      {/* Ring */}
+      <div
+        className="fixed top-0 left-0 rounded-full pointer-events-none z-[9998] border border-violet-500/50"
+        style={{
+          width: isHovering ? 48 : isClicking ? 20 : 32,
+          height: isHovering ? 48 : isClicking ? 20 : 32,
+          transform: `translate3d(${pos.x - (isHovering ? 24 : isClicking ? 10 : 16)}px, ${pos.y - (isHovering ? 24 : isClicking ? 10 : 16)}px, 0)`,
+          transition: 'width 0.25s ease, height 0.25s ease, transform 0.1s ease, background 0.25s ease',
+          background: isHovering ? 'rgba(139, 92, 246, 0.1)' : 'transparent',
+        }}
+      />
+    </>
+  );
 };
 
 export default CustomCursor;
