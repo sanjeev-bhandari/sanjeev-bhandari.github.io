@@ -2,17 +2,17 @@ import { motion } from 'framer-motion';
 import Magnetic from './ui/Magnetic';
 import { FaGithub, FaLinkedinIn } from 'react-icons/fa6';
 import { SiHuggingface, SiMedium } from 'react-icons/si';
-import { FiMail, FiHeart } from 'react-icons/fi';
+import { FiMail } from 'react-icons/fi';
 
-const socialLinks = [
-  { icon: <FaGithub className="w-4 h-4" />, href: 'https://github.com/realsanjeev', label: 'GitHub' },
-  { icon: <FaLinkedinIn className="w-4 h-4" />, href: 'https://linkedin.com/in/realsanjeev', label: 'LinkedIn' },
-  { icon: <SiHuggingface className="w-4 h-4" />, href: 'https://huggingface.co/sanjeev-bhandari01', label: 'Hugging Face' },
-  { icon: <SiMedium className="w-4 h-4" />, href: 'https://medium.com/@sanjeev-bhandari', label: 'Medium' },
-  { icon: <FiMail className="w-4 h-4" />, href: 'mailto:075bei033.sanjeev@pcampus.edu.np', label: 'Email' },
+const socials = [
+  { href: 'https://github.com/realsanjeev', icon: <FaGithub className="w-4 h-4" />, label: 'GitHub' },
+  { href: 'https://linkedin.com/in/realsanjeev', icon: <FaLinkedinIn className="w-4 h-4" />, label: 'LinkedIn' },
+  { href: 'https://medium.com/@realsanjeev', icon: <SiMedium className="w-4 h-4" />, label: 'Medium' },
+  { href: 'https://huggingface.co/realsanjeev', icon: <SiHuggingface className="w-4 h-4" />, label: 'HuggingFace' },
+  { href: 'mailto:075bei033.sanjeev@pcampus.edu.np', icon: <FiMail className="w-4 h-4" />, label: 'Email' },
 ];
 
-const quickLinks = [
+const navLinks = [
   { name: 'About', href: '#about' },
   { name: 'Experience', href: '#experience' },
   { name: 'Projects', href: '#projects' },
@@ -21,82 +21,121 @@ const quickLinks = [
 ];
 
 const Footer = () => {
-  const year = new Date().getFullYear();
-
   return (
-    <footer className="relative overflow-hidden bg-gray-50 dark:bg-gray-950/80 border-t border-gray-100 dark:border-white/5">
-      {/* Top gradient line */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-violet-400/40 to-transparent dark:via-violet-500/30" />
+    <footer className="relative pt-16 pb-10 overflow-hidden">
+      <div
+        className="absolute inset-x-0 top-0 h-px"
+        style={{ background: 'linear-gradient(90deg, transparent, rgba(167,139,250,0.3), transparent)' }}
+      />
 
-      <div className="section-container py-16 md:py-20">
-        <div className="grid md:grid-cols-3 gap-10 md:gap-8 items-start mb-12">
-          {/* Brand */}
-          <div>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="relative w-10 h-10 rounded-xl overflow-hidden shadow-lg shadow-violet-500/20">
-                <div className="absolute inset-0 bg-gradient-to-br from-violet-600 to-indigo-700" />
-                <span className="relative z-10 flex items-center justify-center w-full h-full text-white font-bold text-lg">S</span>
+      {/* Big background text */}
+      <div
+        className="absolute bottom-0 left-1/2 -translate-x-1/2 text-[12vw] font-black leading-none select-none pointer-events-none whitespace-nowrap"
+        style={{
+          fontFamily: 'Space Grotesk',
+          color: 'rgba(167,139,250,0.04)',
+          letterSpacing: '-0.03em',
+        }}
+      >
+        SANJEEV
+      </div>
+
+      <div className="container-xl relative">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-10 mb-12">
+          {/* Left */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="flex items-center gap-3 mb-3">
+              <div
+                className="w-9 h-9 rounded-xl flex items-center justify-center"
+                style={{ background: 'linear-gradient(135deg, #7c3aed, #5b21b6)' }}
+              >
+                <span className="text-white font-bold text-lg" style={{ fontFamily: 'Space Grotesk' }}>S</span>
               </div>
-              <div>
-                <div className="font-bold text-gray-900 dark:text-white text-base">Sanjeev Bhandari</div>
-                <div className="text-xs text-gray-500 dark:text-gray-400">ML Engineer · Nepal</div>
-              </div>
+              <span className="font-bold text-white text-sm" style={{ fontFamily: 'Space Grotesk' }}>Sanjeev Bhandari</span>
             </div>
-            <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed max-w-xs">
-              Building the future of Machine Learning & AI through innovative solutions and research.
+            <p className="text-xs max-w-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>
+              ML Engineer building intelligent systems at the intersection of AI research and real-world impact.
             </p>
-          </div>
+          </motion.div>
 
-          {/* Quick Links */}
-          <div>
-            <h3 className="font-bold text-gray-900 dark:text-white text-sm mb-4 uppercase tracking-wider">Quick Links</h3>
-            <nav className="grid grid-cols-2 gap-2">
-              {quickLinks.map(link => (
+          {/* Nav links */}
+          <motion.nav
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="flex flex-wrap gap-x-6 gap-y-2"
+          >
+            {navLinks.map(l => (
+              <a
+                key={l.name}
+                href={l.href}
+                className="text-sm transition-colors"
+                style={{ color: 'rgba(255,255,255,0.35)' }}
+                onMouseEnter={e => (e.currentTarget.style.color = '#a78bfa')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.35)')}
+              >
+                {l.name}
+              </a>
+            ))}
+          </motion.nav>
+
+          {/* Socials */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="flex items-center gap-2"
+          >
+            {socials.map((s, i) => (
+              <Magnetic key={i} amount={0.3}>
                 <a
-                  key={link.name}
-                  href={link.href}
-                  className="text-sm text-gray-500 dark:text-gray-400 hover:text-violet-600 dark:hover:text-violet-400 transition-colors animated-underline inline-block w-fit"
+                  href={s.href}
+                  target={s.href.startsWith('mailto:') ? undefined : '_blank'}
+                  rel="noopener noreferrer"
+                  aria-label={s.label}
+                  className="w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300"
+                  style={{
+                    background: 'rgba(255,255,255,0.04)',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                    color: 'rgba(255,255,255,0.4)',
+                  }}
+                  onMouseEnter={e => {
+                    const el = e.currentTarget;
+                    el.style.background = 'rgba(167,139,250,0.1)';
+                    el.style.borderColor = 'rgba(167,139,250,0.25)';
+                    el.style.color = '#a78bfa';
+                  }}
+                  onMouseLeave={e => {
+                    const el = e.currentTarget;
+                    el.style.background = 'rgba(255,255,255,0.04)';
+                    el.style.borderColor = 'rgba(255,255,255,0.08)';
+                    el.style.color = 'rgba(255,255,255,0.4)';
+                  }}
                 >
-                  {link.name}
+                  {s.icon}
                 </a>
-              ))}
-            </nav>
-          </div>
-
-          {/* Social */}
-          <div>
-            <h3 className="font-bold text-gray-900 dark:text-white text-sm mb-4 uppercase tracking-wider">Connect</h3>
-            <div className="flex flex-wrap gap-2">
-              {socialLinks.map((s, i) => (
-                <Magnetic key={i} amount={0.2}>
-                  <motion.a
-                    href={s.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    whileHover={{ y: -2 }}
-                    transition={{ duration: 0.2 }}
-                    className="w-9 h-9 rounded-xl bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:text-violet-600 dark:hover:text-violet-400 hover:border-violet-300 dark:hover:border-violet-500/40 hover:bg-violet-50 dark:hover:bg-violet-500/10 transition-all duration-200 shadow-sm"
-                    aria-label={s.label}
-                  >
-                    {s.icon}
-                  </motion.a>
-                </Magnetic>
-              ))}
-            </div>
-          </div>
+              </Magnetic>
+            ))}
+          </motion.div>
         </div>
 
-        {/* Divider */}
-        <div className="divider mb-8" />
-
-        {/* Bottom */}
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-3 text-sm text-gray-500 dark:text-gray-400">
-          <p>© {year} Sanjeev Bhandari. All rights reserved.</p>
-          <p className="flex items-center gap-1.5">
-            Made with
-            <FiHeart className="w-3.5 h-3.5 text-pink-500 fill-pink-500 animate-pulse" />
-            and a lot of
-            <span className="gradient-text font-semibold">Python</span>
+        {/* Bottom bar */}
+        <div
+          className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-6"
+          style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}
+        >
+          <p className="text-xs" style={{ color: 'rgba(255,255,255,0.2)' }}>
+            © {new Date().getFullYear()} Sanjeev Bhandari. All rights reserved.
+          </p>
+          <p className="text-xs" style={{ color: 'rgba(255,255,255,0.2)' }}>
+            Built with React + Framer Motion
           </p>
         </div>
       </div>

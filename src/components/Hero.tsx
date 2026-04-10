@@ -1,260 +1,275 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { FiArrowDown, FiGithub } from 'react-icons/fi';
+import { FiArrowDown, FiGithub, FiMail } from 'react-icons/fi';
 import { FaLinkedinIn } from 'react-icons/fa6';
 import Magnetic from '@/components/ui/Magnetic';
-
-const heroImageUrl = 'hero-image.png';
 
 const ROLES = [
   'Machine Learning Engineer',
   'AI Researcher',
-  'Deep Learning Enthusiast',
   'NLP Specialist',
+  'Deep Learning Engineer',
+  'Computer Vision Engineer',
 ];
 
-const TypeWriter = () => {
-  const [index, setIndex] = useState(0);
-  const [subIndex, setSubIndex] = useState(0);
-  const [deleting, setDeleting] = useState(false);
-  const [blink, setBlink] = useState(true);
+const Typewriter = () => {
+  const [idx, setIdx] = useState(0);
+  const [sub, setSub] = useState(0);
+  const [del, setDel] = useState(false);
 
   useEffect(() => {
-    if (subIndex === ROLES[index].length + 1 && !deleting) {
-      const t = setTimeout(() => setDeleting(true), 2000);
+    const str = ROLES[idx];
+    if (!del && sub === str.length) {
+      const t = setTimeout(() => setDel(true), 2200);
       return () => clearTimeout(t);
     }
-    if (subIndex === 0 && deleting) {
-      setDeleting(false);
-      setIndex(prev => (prev + 1) % ROLES.length);
+    if (del && sub === 0) {
+      setDel(false);
+      setIdx(i => (i + 1) % ROLES.length);
       return;
     }
-    const timeout = deleting ? 40 : 80;
-    const t = setTimeout(() => {
-      setSubIndex(prev => prev + (deleting ? -1 : 1));
-    }, timeout);
+    const t = setTimeout(() => setSub(s => s + (del ? -1 : 1)), del ? 35 : 75);
     return () => clearTimeout(t);
-  }, [subIndex, index, deleting]);
-
-  useEffect(() => {
-    const t = setInterval(() => setBlink(b => !b), 500);
-    return () => clearInterval(t);
-  }, []);
+  }, [sub, idx, del]);
 
   return (
-    <span className="gradient-text font-bold">
-      {ROLES[index].substring(0, subIndex)}
-      <span className={`${blink ? 'opacity-100' : 'opacity-0'} transition-opacity duration-100`}>|</span>
+    <span>
+      <span className="gradient-text">{ROLES[idx].substring(0, sub)}</span>
+      <span className="text-purple-400 animate-pulse">_</span>
     </span>
   );
 };
 
-const stats = [
-  { value: '3+', label: 'Years Experience' },
-  { value: '10+', label: 'ML Projects' },
-  { value: '6+', label: 'Blog Posts' },
-];
-
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.12, delayChildren: 0.2 },
-  },
-};
-
-const item = {
-  hidden: { opacity: 0, y: 30 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } },
+// Giant letter reveal
+const LetterReveal = ({ text, delay = 0 }: { text: string; delay?: number }) => {
+  return (
+    <span className="inline-block overflow-hidden">
+      <motion.span
+        className="inline-block"
+        initial={{ y: '105%' }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] }}
+      >
+        {text}
+      </motion.span>
+    </span>
+  );
 };
 
 const Hero = () => {
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const heroRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const onMove = (e: MouseEvent) => {
+      if (!heroRef.current) return;
+      const rect = heroRef.current.getBoundingClientRect();
+      setMousePos({
+        x: (e.clientX - rect.left - rect.width / 2) / rect.width,
+        y: (e.clientY - rect.top - rect.height / 2) / rect.height,
+      });
+    };
+    window.addEventListener('mousemove', onMove);
+    return () => window.removeEventListener('mousemove', onMove);
+  }, []);
+
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 pt-24 pb-16 w-full">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          {/* Left: Text */}
-          <motion.div
-            variants={container}
-            initial="hidden"
-            animate="show"
-            className="order-2 lg:order-1 text-center lg:text-left"
+    <section
+      ref={heroRef}
+      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
+      style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(124,58,237,0.15) 0%, transparent 60%)' }}
+    >
+      {/* Floating grid lines */}
+      <div className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage: `linear-gradient(rgba(167,139,250,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(167,139,250,0.04) 1px, transparent 1px)`,
+          backgroundSize: '80px 80px',
+          maskImage: 'radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 100%)',
+        }}
+      />
+
+      <div className="relative z-10 container-xl w-full pt-28 pb-20">
+        {/* Top badge */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="flex justify-center mb-10"
+        >
+          <div className="label-pill">
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-400" />
+            </span>
+            Available for opportunities
+          </div>
+        </motion.div>
+
+        {/* Giant name */}
+        <div className="text-center mb-6">
+          <h1
+            className="font-black leading-[0.88] tracking-tighter uppercase text-white"
+            style={{
+              fontSize: 'clamp(72px, 13vw, 200px)',
+              fontFamily: 'Space Grotesk',
+              transform: `translate(${mousePos.x * -8}px, ${mousePos.y * -4}px)`,
+              transition: 'transform 0.6s ease-out',
+              textShadow: '0 0 80px rgba(167,139,250,0.15)',
+            }}
           >
-            {/* Availability badge */}
-            <motion.div variants={item} className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8 glass border border-green-200/50 dark:border-green-500/20">
-              <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
-              </span>
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-200">Available for opportunities</span>
-            </motion.div>
-
-            {/* Name */}
-            <motion.h1 variants={item} className="mb-5">
-              <span className="block text-gray-500 dark:text-gray-400 text-lg md:text-xl font-medium mb-2 tracking-wide">
-                Hello, I'm
-              </span>
-              <span className="block text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.9] text-gray-900 dark:text-white">
-                Sanjeev
-              </span>
-              <span className="block text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.9] text-gray-900 dark:text-white mt-1">
-                Bhandari
-              </span>
-            </motion.h1>
-
-            {/* Role typewriter */}
-            <motion.h2 variants={item} className="text-xl md:text-2xl mb-6 h-9 flex items-center justify-center lg:justify-start">
-              <TypeWriter />
-            </motion.h2>
-
-            {/* Description */}
-            <motion.p variants={item} className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed mb-10 max-w-xl mx-auto lg:mx-0">
-              Building intelligent systems at the intersection of AI research and real-world impact.
-              Passionate about transforming complex problems into elegant, production-ready solutions.
-            </motion.p>
-
-            {/* CTA Buttons */}
-            <motion.div variants={item} className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-12">
-              <Magnetic amount={0.2}>
-                <a href="mailto:075bei033.sanjeev@pcampus.edu.np">
-                  <button className="btn-primary group text-sm px-7 py-3.5">
-                    <svg className="w-4 h-4 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                    Get in Touch
-                  </button>
-                </a>
-              </Magnetic>
-              <Magnetic amount={0.2}>
-                <a href="#projects">
-                  <button className="group inline-flex items-center gap-2 px-7 py-3.5 text-sm font-semibold rounded-full border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:border-violet-400 dark:hover:border-violet-500 hover:text-violet-600 dark:hover:text-violet-400 transition-all duration-300">
-                    View Projects
-                    <FiArrowDown className="w-4 h-4 group-hover:translate-y-0.5 transition-transform" />
-                  </button>
-                </a>
-              </Magnetic>
-            </motion.div>
-
-            {/* Social Links */}
-            <motion.div variants={item} className="flex items-center gap-3 justify-center lg:justify-start mb-12">
-              {[
-                { href: 'https://github.com/realsanjeev', icon: <FiGithub className="w-4 h-4" />, label: 'GitHub' },
-                { href: 'https://linkedin.com/in/realsanjeev', icon: <FaLinkedinIn className="w-4 h-4" />, label: 'LinkedIn' },
-              ].map((s, i) => (
-                <a
-                  key={i}
-                  href={s.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={s.label}
-                  className="w-10 h-10 rounded-full glass border border-gray-200/60 dark:border-white/10 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-violet-600 dark:hover:text-violet-400 hover:border-violet-300 dark:hover:border-violet-500/40 transition-all duration-300"
-                >
-                  {s.icon}
-                </a>
-              ))}
-              <div className="w-px h-6 bg-gray-200 dark:bg-gray-700 mx-1" />
-              <span className="text-sm text-gray-500 dark:text-gray-400">Nepal 🇳🇵</span>
-            </motion.div>
-
-            {/* Stats */}
-            <motion.div variants={item} className="grid grid-cols-3 gap-6 pt-8 border-t border-gray-200/60 dark:border-gray-700/60">
-              {stats.map((s, i) => (
-                <div key={i} className="text-center lg:text-left">
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.5 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.8 + i * 0.1, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                    className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white gradient-text"
-                  >
-                    {s.value}
-                  </motion.div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 font-medium">{s.label}</div>
-                </div>
-              ))}
-            </motion.div>
-          </motion.div>
-
-          {/* Right: Image */}
-          <motion.div
-            initial={{ opacity: 0, x: 60 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.9, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="order-1 lg:order-2 flex justify-center lg:justify-end"
-          >
-            <div className="relative group">
-              {/* Animated background glow */}
-              <div className="absolute -inset-6 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"
-                style={{ background: 'conic-gradient(from 0deg, #7c3aed33, #3b82f633, #ec489933, #7c3aed33)', filter: 'blur(30px)', animation: 'spin 8s linear infinite' }}
-              />
-              <div className="absolute -inset-1 bg-gradient-to-r from-violet-500/20 via-indigo-500/20 to-pink-500/20 rounded-3xl blur-xl opacity-70 group-hover:opacity-100 transition-opacity duration-500" />
-
-              {/* Image */}
-              <div className="relative overflow-hidden rounded-2xl shadow-2xl shadow-violet-500/10 border border-white/50 dark:border-white/10">
-                <img
-                  src={heroImageUrl}
-                  alt="Sanjeev Bhandari - ML Engineer"
-                  className="w-full max-w-md h-auto object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                  draggable={false}
-                  loading="eager"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-violet-900/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              </div>
-
-              {/* Floating Badge - AI & ML */}
-              <motion.div
-                initial={{ opacity: 0, y: 20, x: 20 }}
-                animate={{ opacity: 1, y: 0, x: 0 }}
-                transition={{ delay: 1.0, duration: 0.5 }}
-                className="absolute -bottom-5 -left-5 glass-card rounded-2xl p-3.5 shadow-xl"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-violet-500/30 animate-pulse-glow">
-                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <div className="text-sm font-bold text-gray-900 dark:text-white">AI & ML</div>
-                    <div className="text-xs text-gray-500 dark:text-gray-400">Specialist</div>
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* Floating Badge - Open Source */}
-              <motion.div
-                initial={{ opacity: 0, y: -20, x: -20 }}
-                animate={{ opacity: 1, y: 0, x: 0 }}
-                transition={{ delay: 1.2, duration: 0.5 }}
-                className="absolute -top-4 -right-4 glass-card rounded-xl p-2.5 shadow-xl"
-              >
-                <div className="flex items-center gap-2">
-                  <FiGithub className="w-4 h-4 text-gray-800 dark:text-white" />
-                  <span className="text-xs font-semibold text-gray-700 dark:text-gray-200">Open Source</span>
-                </div>
-              </motion.div>
+            <div className="overflow-hidden">
+              <LetterReveal text="SANJEEV" delay={0.5} />
             </div>
-          </motion.div>
+            <div className="overflow-hidden" style={{ marginTop: '-0.05em' }}>
+              <LetterReveal text="BHANDARI" delay={0.65} />
+            </div>
+          </h1>
         </div>
 
-        {/* Scroll indicator */}
+        {/* Role + description */}
+        <div className="text-center mb-12">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 1.0 }}
+            className="text-xl md:text-2xl font-medium mb-6 h-9"
+            style={{ color: 'rgba(255,255,255,0.6)' }}
+          >
+            <Typewriter />
+          </motion.div>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 1.1 }}
+            className="text-base md:text-lg max-w-xl mx-auto leading-relaxed"
+            style={{ color: 'rgba(255,255,255,0.4)' }}
+          >
+            Building intelligent systems at the intersection of AI research and
+            real-world impact. Based in Nepal 🇳🇵
+          </motion.p>
+        </div>
+
+        {/* CTA buttons */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 1.2 }}
+          className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-14"
+        >
+          <Magnetic amount={0.3}>
+            <a href="mailto:075bei033.sanjeev@pcampus.edu.np" className="btn-glow">
+              <FiMail className="w-4 h-4" />
+              Get in Touch
+            </a>
+          </Magnetic>
+          <Magnetic amount={0.3}>
+            <a href="#projects" className="btn-outline-glow">
+              View My Work
+              <FiArrowDown className="w-4 h-4" />
+            </a>
+          </Magnetic>
+        </motion.div>
+
+        {/* Social links */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.5 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden md:flex flex-col items-center gap-2"
+          transition={{ duration: 0.6, delay: 1.3 }}
+          className="flex items-center justify-center gap-3 mb-16"
         >
-          <a href="#about" className="flex flex-col items-center text-gray-400 dark:text-gray-500 hover:text-violet-500 transition-colors group">
-            <span className="text-xs font-medium tracking-widest uppercase mb-2 opacity-70">Scroll</span>
-            <motion.div
-              animate={{ y: [0, 6, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-            >
-              <FiArrowDown className="w-5 h-5" />
-            </motion.div>
-          </a>
+          {[
+            { href: 'https://github.com/realsanjeev', icon: <FiGithub className="w-4 h-4" />, label: 'GitHub' },
+            { href: 'https://linkedin.com/in/realsanjeev', icon: <FaLinkedinIn className="w-4 h-4" />, label: 'LinkedIn' },
+          ].map((s, i) => (
+            <Magnetic key={i} amount={0.3}>
+              <a
+                href={s.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={s.label}
+                className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300"
+                style={{
+                  background: 'rgba(255,255,255,0.04)',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  color: 'rgba(255,255,255,0.45)',
+                }}
+                onMouseEnter={e => {
+                  const el = e.currentTarget;
+                  el.style.background = 'rgba(167,139,250,0.12)';
+                  el.style.borderColor = 'rgba(167,139,250,0.35)';
+                  el.style.color = '#a78bfa';
+                }}
+                onMouseLeave={e => {
+                  const el = e.currentTarget;
+                  el.style.background = 'rgba(255,255,255,0.04)';
+                  el.style.borderColor = 'rgba(255,255,255,0.1)';
+                  el.style.color = 'rgba(255,255,255,0.45)';
+                }}
+              >
+                {s.icon}
+              </a>
+            </Magnetic>
+          ))}
+          <div className="w-px h-5 mx-1" style={{ background: 'rgba(255,255,255,0.1)' }} />
+          <span className="text-sm" style={{ color: 'rgba(255,255,255,0.25)' }}>Nepal 🇳🇵</span>
+        </motion.div>
+
+        {/* Stats row */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 1.35 }}
+          className="flex items-center justify-center gap-10 md:gap-16 pt-10"
+          style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}
+        >
+          {[
+            { value: '3+', label: 'Years Exp.' },
+            { value: '10+', label: 'Projects' },
+            { value: '6+', label: 'Articles' },
+          ].map((s, i) => (
+            <div key={i} className="text-center">
+              <div
+                className="text-3xl md:text-4xl font-black gradient-text-purple"
+                style={{ fontFamily: 'Space Grotesk' }}
+              >
+                {s.value}
+              </div>
+              <div className="text-xs mt-1 font-medium" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                {s.label}
+              </div>
+            </div>
+          ))}
         </motion.div>
       </div>
+
+      {/* Scroll indicator */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.5 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+      >
+        <a href="#about" className="flex flex-col items-center gap-2 group">
+          <span
+            className="text-[10px] font-semibold tracking-widest uppercase transition-colors"
+            style={{ color: 'rgba(255,255,255,0.2)' }}
+          >
+            Scroll
+          </span>
+          <div
+            className="w-5 h-8 rounded-full flex items-start justify-center pt-1.5"
+            style={{ border: '1px solid rgba(255,255,255,0.12)' }}
+          >
+            <motion.div
+              className="w-1 h-2 rounded-full"
+              style={{ background: 'rgba(167,139,250,0.8)' }}
+              animate={{ y: [0, 10, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+            />
+          </div>
+        </a>
+      </motion.div>
     </section>
   );
 };

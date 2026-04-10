@@ -1,30 +1,29 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const MouseGlow = () => {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [opacity, setOpacity] = useState(0);
+  const [pos, setPos] = useState({ x: 0, y: 0 });
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setPosition({ x: e.clientX, y: e.clientY });
-      setOpacity(1);
+    const move = (e: MouseEvent) => {
+      setPos({ x: e.clientX, y: e.clientY });
+      setVisible(true);
     };
-    const handleMouseLeave = () => setOpacity(0);
-
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseleave', handleMouseLeave);
+    const leave = () => setVisible(false);
+    window.addEventListener('mousemove', move);
+    window.addEventListener('mouseleave', leave);
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseleave', handleMouseLeave);
+      window.removeEventListener('mousemove', move);
+      window.removeEventListener('mouseleave', leave);
     };
   }, []);
 
   return (
     <div
-      className="pointer-events-none fixed inset-0 z-[1] transition-opacity duration-500"
+      className="pointer-events-none fixed inset-0 z-[1] transition-opacity duration-700"
       style={{
-        background: `radial-gradient(500px at ${position.x}px ${position.y}px, rgba(124, 58, 237, 0.07), transparent 80%)`,
-        opacity,
+        opacity: visible ? 1 : 0,
+        background: `radial-gradient(450px circle at ${pos.x}px ${pos.y}px, rgba(124, 58, 237, 0.06), transparent 80%)`,
       }}
     />
   );

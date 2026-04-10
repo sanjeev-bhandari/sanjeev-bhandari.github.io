@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { useEffect, useState, useCallback } from 'react';
 import Navigation from '@/components/Navigation';
 import Hero from '@/components/Hero';
 import About from '@/components/About';
@@ -7,58 +6,64 @@ import Experience from '@/components/Experience';
 import Projects from '@/components/Projects';
 import Blog from '@/components/Blog';
 import Contact from '@/components/Contact';
-import MouseGlow from '@/components/ui/MouseGlow';
-import CustomCursor from '@/components/ui/CustomCursor';
-import BackgroundMesh from '@/components/ui/BackgroundMesh';
 import Footer from '@/components/Footer';
+import BackgroundMesh from '@/components/ui/BackgroundMesh';
+import CustomCursor from '@/components/ui/CustomCursor';
+import MouseGlow from '@/components/ui/MouseGlow';
+import LoadingScreen from '@/components/ui/LoadingScreen';
 
 const Index = () => {
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const [loaded, setLoaded] = useState(false);
+  const [scrollPct, setScrollPct] = useState(0);
+
+  const onLoadComplete = useCallback(() => setLoaded(true), []);
 
   useEffect(() => {
-    // Initialize dark mode from localStorage
-    const stored = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    document.documentElement.classList.toggle('dark', stored === 'dark' || (!stored && prefersDark));
-  }, []);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-      setScrollProgress(totalHeight > 0 ? (window.scrollY / totalHeight) * 100 : 0);
+    if (!loaded) return;
+    const onScroll = () => {
+      const el = document.documentElement;
+      const pct = el.scrollTop / (el.scrollHeight - el.clientHeight);
+      setScrollPct(pct * 100);
     };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [loaded]);
 
   return (
-    <div className="min-h-screen bg-background text-foreground relative">
-      {/* Scroll progress bar */}
-      <motion.div
-        className="fixed top-0 left-0 h-0.5 z-[100] origin-left"
-        style={{
-          scaleX: scrollProgress / 100,
-          background: 'linear-gradient(90deg, #7c3aed, #a855f7, #ec4899)',
-        }}
-        initial={{ scaleX: 0 }}
-      />
+    <div
+      className="noise min-h-screen relative"
+      style={{ background: '#030012' }}
+    >
+      <LoadingScreen onComplete={onLoadComplete} />
 
-      <BackgroundMesh />
-      <CustomCursor />
-      <MouseGlow />
-      <Navigation />
+      {loaded && (
+        <>
+          {/* Scroll progress bar */}
+          <div
+            className="fixed top-0 left-0 h-[2px] z-[100] transition-all duration-100"
+            style={{
+              width: `${scrollPct}%`,
+              background: 'linear-gradient(90deg, #7c3aed, #a78bfa, #67e8f9)',
+              boxShadow: '0 0 8px rgba(167,139,250,0.8)',
+            }}
+          />
 
-      <main>
-        <Hero />
+          <BackgroundMesh />
+          <MouseGlow />
+          <CustomCursor />
+          <Navigation />
 
-        <About />
-        <Experience />
-        <Projects />
-        <Blog />
-        <Contact />
-      </main>
-
-      <Footer />
+          <main>
+            <Hero />
+            <About />
+            <Experience />
+            <Projects />
+            <Blog />
+            <Contact />
+          </main>
+          <Footer />
+        </>
+      )}
     </div>
   );
 };

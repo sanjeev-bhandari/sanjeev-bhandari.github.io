@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 const BackgroundMesh = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -9,77 +9,71 @@ const BackgroundMesh = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let width: number, height: number;
-    let particles: {
-      x: number; y: number; vx: number; vy: number;
-      radius: number; color: string; opacity: number;
-    }[] = [];
+    let w = 0, h = 0;
     let animId: number;
 
-    const lightColors = [
-      { color: '#6366f1', opacity: 0.09 },
-      { color: '#a855f7', opacity: 0.07 },
-      { color: '#3b82f6', opacity: 0.06 },
-      { color: '#ec4899', opacity: 0.04 },
-    ];
-
-    const darkColors = [
-      { color: '#818cf8', opacity: 0.15 },
-      { color: '#c084fc', opacity: 0.12 },
-      { color: '#60a5fa', opacity: 0.10 },
-      { color: '#f472b6', opacity: 0.08 },
-    ];
-
-    const isDark = () => document.documentElement.classList.contains('dark');
-
-    const resize = () => {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-      initParticles();
+    type Particle = {
+      x: number; y: number; vx: number; vy: number;
+      r: number; opacity: number;
     };
 
-    const initParticles = () => {
+    let particles: Particle[] = [];
+
+    const resize = () => {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+      init();
+    };
+
+    const init = () => {
       particles = [];
-      const dark = isDark();
-      const colors = dark ? darkColors : lightColors;
-      for (let i = 0; i < 6; i++) {
-        const c = colors[i % colors.length];
+      const count = Math.floor((w * h) / 14000);
+      for (let i = 0; i < count; i++) {
         particles.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
-          vx: (Math.random() - 0.5) * 0.25,
-          vy: (Math.random() - 0.5) * 0.25,
-          radius: Math.random() * 400 + 250,
-          color: c.color,
-          opacity: c.opacity,
+          x: Math.random() * w,
+          y: Math.random() * h,
+          vx: (Math.random() - 0.5) * 0.3,
+          vy: (Math.random() - 0.5) * 0.3,
+          r: Math.random() * 1.5 + 0.3,
+          opacity: Math.random() * 0.4 + 0.1,
         });
       }
     };
 
     const draw = () => {
-      ctx.clearRect(0, 0, width, height);
+      ctx.clearRect(0, 0, w, h);
 
-      particles.forEach((p) => {
-        const r = parseInt(p.color.slice(1, 3), 16);
-        const g = parseInt(p.color.slice(3, 5), 16);
-        const b = parseInt(p.color.slice(5, 7), 16);
+      // Draw connections
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 130) {
+            const alpha = (1 - dist / 130) * 0.15;
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `rgba(167, 139, 250, ${alpha})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+      }
 
-        const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius);
-        gradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${p.opacity})`);
-        gradient.addColorStop(0.5, `rgba(${r}, ${g}, ${b}, ${p.opacity * 0.4})`);
-        gradient.addColorStop(1, 'transparent');
-
-        ctx.fillStyle = gradient;
+      // Draw particles
+      particles.forEach(p => {
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(167, 139, 250, ${p.opacity})`;
         ctx.fill();
 
         p.x += p.vx;
         p.y += p.vy;
-        if (p.x < -p.radius) p.x = width + p.radius;
-        if (p.x > width + p.radius) p.x = -p.radius;
-        if (p.y < -p.radius) p.y = height + p.radius;
-        if (p.y > height + p.radius) p.y = -p.radius;
+        if (p.x < 0) p.x = w;
+        if (p.x > w) p.x = 0;
+        if (p.y < 0) p.y = h;
+        if (p.y > h) p.y = 0;
       });
 
       animId = requestAnimationFrame(draw);
@@ -89,22 +83,53 @@ const BackgroundMesh = () => {
     resize();
     draw();
 
-    const observer = new MutationObserver(initParticles);
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-
     return () => {
       window.removeEventListener('resize', resize);
       cancelAnimationFrame(animId);
-      observer.disconnect();
     };
   }, []);
 
   return (
-    <canvas
-      ref={canvasRef}
-      className="fixed inset-0 -z-20 pointer-events-none"
-      style={{ filter: 'blur(70px)' }}
-    />
+    <>
+      {/* Particle canvas */}
+      <canvas
+        ref={canvasRef}
+        className="fixed inset-0 pointer-events-none"
+        style={{ zIndex: 0, opacity: 0.6 }}
+      />
+
+      {/* Gradient orbs */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }}>
+        {/* Top right violet orb */}
+        <div className="orb animate-float"
+          style={{
+            width: '60vw', height: '60vw',
+            top: '-20vw', right: '-15vw',
+            background: 'radial-gradient(circle, rgba(124,58,237,0.18) 0%, transparent 70%)',
+            animationDuration: '8s',
+          }}
+        />
+        {/* Bottom left cyan orb */}
+        <div className="orb animate-float-delayed"
+          style={{
+            width: '50vw', height: '50vw',
+            bottom: '-15vw', left: '-10vw',
+            background: 'radial-gradient(circle, rgba(6,182,212,0.12) 0%, transparent 70%)',
+            animationDuration: '10s',
+          }}
+        />
+        {/* Center pink orb */}
+        <div className="orb animate-float"
+          style={{
+            width: '40vw', height: '40vw',
+            top: '40%', left: '35%',
+            background: 'radial-gradient(circle, rgba(236,72,153,0.06) 0%, transparent 70%)',
+            animationDuration: '12s',
+            animationDelay: '4s',
+          }}
+        />
+      </div>
+    </>
   );
 };
 
