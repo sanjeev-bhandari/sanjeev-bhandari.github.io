@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { FiExternalLink, FiClock } from 'react-icons/fi';
 import { BLOG_POSTS } from '@/data/portfolio';
+import ScrambleText from '@/components/ui/ScrambleText';
 
 const CARD_GRADIENTS = [
   'from-violet-500/10 to-purple-500/5',
@@ -32,17 +33,30 @@ const Blog = () => {
             <div className="flex-1 h-px" style={{ background: 'rgba(167,139,250,0.12)' }} />
           </motion.div>
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-            <motion.h2
-              initial={{ opacity: 0, y: 30 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7, delay: 0.1 }}
+            <h2
               className="text-4xl md:text-6xl lg:text-7xl font-black text-white tracking-tight leading-[0.95]"
               style={{ fontFamily: 'Space Grotesk' }}
             >
-              Latest
+              <div style={{ overflow: 'hidden' }}>
+                <motion.div
+                  initial={{ y: '110%' }} animate={inView ? { y: 0 } : {}}
+                  transition={{ duration: 0.9, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <ScrambleText text="Latest" trigger={inView} delay={150} framesPerChar={5} />
+                </motion.div>
+              </div>
               <br />
-              <span className="gradient-text">Articles</span>
-            </motion.h2>
+              <div style={{ overflow: 'hidden' }}>
+                <motion.div
+                  initial={{ y: '110%' }} animate={inView ? { y: 0 } : {}}
+                  transition={{ duration: 0.9, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <span className="gradient-text">
+                    <ScrambleText text="Articles" trigger={inView} delay={400} framesPerChar={5} />
+                  </span>
+                </motion.div>
+              </div>
+            </h2>
             <motion.a
               initial={{ opacity: 0 }}
               animate={inView ? { opacity: 1 } : {}}

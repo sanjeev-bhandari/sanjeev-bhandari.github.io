@@ -1,121 +1,177 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 interface LoadingScreenProps {
   onComplete: () => void;
 }
 
+const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%!?><|=+-';
+const NAME = 'SANJEEV BHANDARI';
+
+const MatrixRain = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const fontSize = 13;
+    const cols = Math.floor(canvas.width / fontSize);
+    const drops: number[] = Array(cols).fill(1).map(() => Math.random() * -50);
+
+    let animId: number;
+    const draw = () => {
+      ctx.fillStyle = 'rgba(3,0,18,0.05)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.font = `${fontSize}px monospace`;
+
+      for (let i = 0; i < drops.length; i++) {
+        const char = CHARS[Math.floor(Math.random() * CHARS.length)];
+        const alpha = Math.random() * 0.15 + 0.04;
+        ctx.fillStyle = `rgba(167,139,250,${alpha})`;
+        ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+        drops[i] += 0.4;
+      }
+      animId = requestAnimationFrame(draw);
+    };
+    draw();
+    return () => cancelAnimationFrame(animId);
+  }, []);
+
+  return <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none" style={{ opacity: 0.6 }} />;
+};
+
 const LoadingScreen = ({ onComplete }: LoadingScreenProps) => {
+  const [displayName, setDisplayName] = useState('');
   const [progress, setProgress] = useState(0);
+  const [phase, setPhase] = useState<'scramble' | 'settle' | 'done'>('scramble');
   const [done, setDone] = useState(false);
 
   useEffect(() => {
-    const steps = [
-      { target: 25, duration: 400 },
-      { target: 60, duration: 500 },
-      { target: 85, duration: 350 },
-      { target: 100, duration: 250 },
-    ];
+    let frame = 0;
+    const SCRAMBLE_FRAMES = 80;
+    const SETTLE_FRAMES = NAME.length * 5;
+    let animId: number;
 
-    let current = 0;
-    const runStep = () => {
-      if (current >= steps.length) {
+    const animate = () => {
+      frame++;
+      const totalFrames = SCRAMBLE_FRAMES + SETTLE_FRAMES;
+      const pct = Math.min(frame / totalFrames, 1);
+      setProgress(pct * 100);
+
+      if (frame <= SCRAMBLE_FRAMES) {
+        setPhase('scramble');
+        // Full random scramble
+        setDisplayName(NAME.split('').map(c => c === ' ' ? ' ' : CHARS[Math.floor(Math.random() * CHARS.length)]).join(''));
+      } else {
+        setPhase('settle');
+        const settleFrame = frame - SCRAMBLE_FRAMES;
+        const settled = Math.floor((settleFrame / SETTLE_FRAMES) * NAME.length);
+        let result = '';
+        for (let i = 0; i < NAME.length; i++) {
+          if (NAME[i] === ' ') { result += ' '; continue; }
+          if (i < settled) result += NAME[i];
+          else result += CHARS[Math.floor(Math.random() * CHARS.length)];
+        }
+        setDisplayName(result);
+      }
+
+      if (frame < totalFrames) {
+        animId = requestAnimationFrame(animate);
+      } else {
+        setDisplayName(NAME);
+        setPhase('done');
         setTimeout(() => {
           setDone(true);
-          setTimeout(onComplete, 600);
-        }, 300);
-        return;
+          setTimeout(onComplete, 700);
+        }, 400);
       }
-      const { target, duration } = steps[current];
-      const startTime = Date.now();
-      const startVal = current === 0 ? 0 : steps[current - 1].target;
-
-      const animate = () => {
-        const elapsed = Date.now() - startTime;
-        const t = Math.min(elapsed / duration, 1);
-        const ease = 1 - Math.pow(1 - t, 3);
-        setProgress(startVal + (target - startVal) * ease);
-        if (t < 1) requestAnimationFrame(animate);
-        else { current++; runStep(); }
-      };
-      requestAnimationFrame(animate);
     };
-    runStep();
+
+    animId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animId);
   }, [onComplete]);
 
   return (
     <AnimatePresence>
       {!done && (
         <motion.div
-          exit={{ opacity: 0, scale: 1.04 }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          exit={{ opacity: 0, scale: 1.03 }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           className="fixed inset-0 z-[9999] flex flex-col items-center justify-center"
           style={{ background: '#030012' }}
         >
-          {/* Ambient glow behind logo */}
-          <div
-            className="absolute"
-            style={{
-              width: 300,
-              height: 300,
-              borderRadius: '50%',
-              background: 'radial-gradient(circle, rgba(124,58,237,0.2) 0%, transparent 70%)',
-              filter: 'blur(40px)',
-            }}
-          />
+          <MatrixRain />
 
-          {/* Logo mark */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.7, y: 10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="mb-10 relative z-10"
-          >
-            <div
-              className="w-20 h-20 rounded-3xl flex items-center justify-center relative"
-              style={{ background: 'linear-gradient(135deg, #7c3aed, #5b21b6)', boxShadow: '0 0 40px rgba(124,58,237,0.5)' }}
+          <div className="relative z-10 flex flex-col items-center">
+            {/* S Logo */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              className="mb-10"
             >
-              <span className="text-white font-black text-4xl" style={{ fontFamily: 'Space Grotesk' }}>S</span>
-            </div>
-          </motion.div>
+              <div
+                className="w-16 h-16 rounded-2xl flex items-center justify-center"
+                style={{
+                  background: 'linear-gradient(135deg, #7c3aed, #5b21b6)',
+                  boxShadow: '0 0 40px rgba(124,58,237,0.5), 0 0 80px rgba(124,58,237,0.15)',
+                }}
+              >
+                <span className="text-white font-black text-3xl" style={{ fontFamily: 'Space Grotesk' }}>S</span>
+              </div>
+            </motion.div>
 
-          {/* Name */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.25 }}
-            className="relative z-10 text-center mb-3"
-          >
-            <div className="text-white font-bold text-2xl tracking-tight mb-1" style={{ fontFamily: 'Space Grotesk' }}>
-              Sanjeev Bhandari
+            {/* Scrambling name */}
+            <div
+              className="text-xl md:text-2xl font-black tracking-[0.15em] mb-2 font-mono"
+              style={{
+                color: phase === 'done' ? '#ffffff' : 'rgba(167,139,250,0.85)',
+                fontFamily: 'Space Grotesk',
+                transition: phase === 'done' ? 'color 0.4s ease' : 'none',
+                textShadow: phase === 'done' ? '0 0 20px rgba(167,139,250,0.4)' : 'none',
+                letterSpacing: '0.18em',
+              }}
+            >
+              {displayName || '_ _ _ _ _ _ _'}
             </div>
-            <div className="text-xs tracking-widest uppercase" style={{ color: 'rgba(167,139,250,0.6)', letterSpacing: '0.2em' }}>
+
+            <div
+              className="text-xs tracking-[0.3em] uppercase mb-14"
+              style={{ color: 'rgba(167,139,250,0.4)', letterSpacing: '0.25em' }}
+            >
               ML Engineer
             </div>
-          </motion.div>
 
-          {/* Progress area */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
-            className="relative z-10 mt-12 flex flex-col items-center gap-3"
-          >
-            <div className="w-52 h-px relative overflow-hidden rounded-full" style={{ background: 'rgba(255,255,255,0.06)' }}>
+            {/* Progress bar */}
+            <div className="w-56 mb-3 relative">
               <div
-                className="absolute left-0 top-0 h-full rounded-full transition-none"
-                style={{
-                  width: `${progress}%`,
-                  background: 'linear-gradient(90deg, #7c3aed, #a78bfa, #67e8f9)',
-                  boxShadow: '0 0 12px rgba(167,139,250,0.9)',
-                  transition: 'width 0.05s linear',
-                }}
-              />
+                className="w-full h-px rounded-full overflow-hidden"
+                style={{ background: 'rgba(255,255,255,0.06)' }}
+              >
+                <motion.div
+                  className="h-full rounded-full"
+                  style={{
+                    background: 'linear-gradient(90deg, #7c3aed, #a78bfa, #67e8f9)',
+                    boxShadow: '0 0 10px rgba(167,139,250,0.8)',
+                    width: `${progress}%`,
+                    transition: 'width 0.03s linear',
+                  }}
+                />
+              </div>
             </div>
-            <div className="text-xs font-mono tabular-nums" style={{ color: 'rgba(255,255,255,0.25)' }}>
-              {Math.round(progress).toString().padStart(3, '0')}
+
+            {/* Progress label */}
+            <div className="text-xs font-mono" style={{ color: 'rgba(167,139,250,0.3)', letterSpacing: '0.1em' }}>
+              {Math.round(progress).toString().padStart(3, '0')} / 100
             </div>
-          </motion.div>
+          </div>
         </motion.div>
       )}
     </AnimatePresence>

@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { SKILLS } from '@/data/portfolio';
+import ScrambleText from '@/components/ui/ScrambleText';
 
 const skills_flat = [
   'Python', 'PyTorch', 'HuggingFace', 'LangChain', 'FastAPI', 'Docker',
@@ -53,17 +54,30 @@ const About = () => {
             <span className="label-pill">About</span>
             <div className="flex-1 h-px" style={{ background: 'rgba(167,139,250,0.15)' }} />
           </motion.div>
-          <motion.h2
-            initial={{ opacity: 0, y: 30 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.1 }}
+          <h2
             className="text-4xl md:text-6xl lg:text-7xl font-black text-white tracking-tight leading-[0.95]"
             style={{ fontFamily: 'Space Grotesk' }}
           >
-            Passionate about
+            <div style={{ overflow: 'hidden' }}>
+              <motion.div
+                initial={{ y: '110%' }} animate={inView ? { y: 0 } : {}}
+                transition={{ duration: 0.9, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <ScrambleText text="Passionate about" trigger={inView} delay={150} framesPerChar={5} />
+              </motion.div>
+            </div>
             <br />
-            <span className="gradient-text">intelligent systems</span>
-          </motion.h2>
+            <div style={{ overflow: 'hidden' }}>
+              <motion.div
+                initial={{ y: '110%' }} animate={inView ? { y: 0 } : {}}
+                transition={{ duration: 0.9, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <span className="gradient-text">
+                  <ScrambleText text="intelligent systems" trigger={inView} delay={400} framesPerChar={5} />
+                </span>
+              </motion.div>
+            </div>
+          </h2>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-start">

@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import emailjs from '@emailjs/browser';
+import ScrambleText from '@/components/ui/ScrambleText';
 import { Input } from '@/components/ui/input';
 import { FiMail, FiSend, FiCheck, FiAlertCircle, FiGithub, FiLinkedin } from 'react-icons/fi';
 import Magnetic from '@/components/ui/Magnetic';
@@ -66,17 +67,30 @@ const Contact = () => {
           >
             <span className="label-pill">Contact</span>
           </motion.div>
-          <motion.h2
-            initial={{ opacity: 0, y: 30 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.1 }}
+          <h2
             className="text-4xl md:text-6xl lg:text-8xl font-black text-white tracking-tight leading-[0.9] mb-6"
             style={{ fontFamily: 'Space Grotesk' }}
           >
-            Let's build
+            <div style={{ overflow: 'hidden' }}>
+              <motion.div
+                initial={{ y: '110%' }} animate={inView ? { y: 0 } : {}}
+                transition={{ duration: 0.9, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <ScrambleText text="Let's build" trigger={inView} delay={150} framesPerChar={5} />
+              </motion.div>
+            </div>
             <br />
-            <span className="gradient-text">something great</span>
-          </motion.h2>
+            <div style={{ overflow: 'hidden' }}>
+              <motion.div
+                initial={{ y: '110%' }} animate={inView ? { y: 0 } : {}}
+                transition={{ duration: 0.9, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <span className="gradient-text">
+                  <ScrambleText text="something great" trigger={inView} delay={400} framesPerChar={5} />
+                </span>
+              </motion.div>
+            </div>
+          </h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}

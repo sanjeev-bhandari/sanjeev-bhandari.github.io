@@ -1,5 +1,5 @@
-import { useEffect, useState, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { useEffect, useState, useRef, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { FiArrowDown, FiGithub, FiMail } from 'react-icons/fi';
 import { FaLinkedinIn } from 'react-icons/fa6';
 import Magnetic from '@/components/ui/Magnetic';
@@ -12,16 +12,9 @@ const ROLES = [
   'Computer Vision Engineer',
 ];
 
-// Floating ambient elements around the hero
-const FLOATERS = [
-  { text: 'PyTorch', x: '5%', y: '22%', delay: 0.8, color: '#f9a8d4' },
-  { text: 'LLMs', x: '88%', y: '18%', delay: 1.0, color: '#67e8f9' },
-  { text: 'RAG', x: '7%', y: '68%', delay: 1.2, color: '#a78bfa' },
-  { text: 'HuggingFace', x: '82%', y: '64%', delay: 0.9, color: '#86efac' },
-  { text: 'LoRA', x: '76%', y: '36%', delay: 1.3, color: '#fcd34d' },
-  { text: 'FastAPI', x: '12%', y: '45%', delay: 1.1, color: '#67e8f9' },
-];
+const GLITCH_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%';
 
+// ─── Typewriter ───────────────────────────────────────────────────────────────
 const Typewriter = () => {
   const [idx, setIdx] = useState(0);
   const [sub, setSub] = useState(0);
@@ -30,7 +23,7 @@ const Typewriter = () => {
   useEffect(() => {
     const str = ROLES[idx];
     if (!del && sub === str.length) {
-      const t = setTimeout(() => setDel(true), 2200);
+      const t = setTimeout(() => setDel(true), 2400);
       return () => clearTimeout(t);
     }
     if (del && sub === 0) {
@@ -38,31 +31,120 @@ const Typewriter = () => {
       setIdx(i => (i + 1) % ROLES.length);
       return;
     }
-    const t = setTimeout(() => setSub(s => s + (del ? -1 : 1)), del ? 35 : 75);
+    const t = setTimeout(() => setSub(s => s + (del ? -1 : 1)), del ? 32 : 72);
     return () => clearTimeout(t);
   }, [sub, idx, del]);
 
   return (
     <span>
-      <span className="gradient-text">{ROLES[idx].substring(0, sub)}</span>
-      <span className="text-purple-400 animate-pulse">_</span>
+      <span className="gradient-text font-semibold">{ROLES[idx].substring(0, sub)}</span>
+      <motion.span
+        className="inline-block w-0.5 h-5 md:h-6 align-middle ml-0.5"
+        style={{ background: '#a78bfa', verticalAlign: 'middle' }}
+        animate={{ opacity: [1, 0, 1] }}
+        transition={{ duration: 0.9, repeat: Infinity }}
+      />
     </span>
   );
 };
 
-const LetterReveal = ({ text, delay = 0 }: { text: string; delay?: number }) => (
-  <span className="inline-block overflow-hidden">
-    <motion.span
-      className="inline-block"
-      initial={{ y: '105%' }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.9, delay, ease: [0.22, 1, 0.36, 1] }}
+// ─── Glitch Name ──────────────────────────────────────────────────────────────
+const GlitchName = ({ text }: { text: string }) => {
+  const [glitching, setGlitching] = useState(false);
+  const [glitchChars, setGlitchChars] = useState(text);
+  const intervalRef = useRef<ReturnType<typeof setInterval>>();
+  const glitchRef = useRef<ReturnType<typeof setTimeout>>();
+
+  const startGlitch = useCallback(() => {
+    setGlitching(true);
+    let count = 0;
+
+    intervalRef.current = setInterval(() => {
+      const result = text.split('').map((c, i) => {
+        if (Math.random() < 0.35) return GLITCH_CHARS[Math.floor(Math.random() * GLITCH_CHARS.length)];
+        return c;
+      }).join('');
+      setGlitchChars(result);
+      count++;
+      if (count > 6) {
+        clearInterval(intervalRef.current);
+        setGlitchChars(text);
+        setGlitching(false);
+      }
+    }, 55);
+  }, [text]);
+
+  // Trigger randomly every 5-10s
+  useEffect(() => {
+    const schedule = () => {
+      const delay = 5000 + Math.random() * 5000;
+      glitchRef.current = setTimeout(() => {
+        startGlitch();
+        schedule();
+      }, delay);
+    };
+    const init = setTimeout(schedule, 3000);
+    return () => {
+      clearTimeout(init);
+      clearTimeout(glitchRef.current);
+      clearInterval(intervalRef.current);
+    };
+  }, [startGlitch]);
+
+  return (
+    <span className="relative inline-block">
+      {/* Ghost layers for RGB split during glitch */}
+      <AnimatePresence>
+        {glitching && (
+          <>
+            <motion.span
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.7 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 pointer-events-none select-none"
+              style={{
+                color: 'rgba(255,0,80,0.7)',
+                transform: 'translate(-4px, 2px)',
+                clipPath: 'polygon(0 20%, 100% 20%, 100% 45%, 0 45%)',
+              }}
+            >
+              {glitchChars}
+            </motion.span>
+            <motion.span
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.7 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 pointer-events-none select-none"
+              style={{
+                color: 'rgba(0,255,255,0.7)',
+                transform: 'translate(4px, -2px)',
+                clipPath: 'polygon(0 55%, 100% 55%, 100% 78%, 0 78%)',
+              }}
+            >
+              {glitchChars}
+            </motion.span>
+          </>
+        )}
+      </AnimatePresence>
+      <span style={{ position: 'relative' }}>{glitching ? glitchChars : text}</span>
+    </span>
+  );
+};
+
+// ─── Line reveal (clip-path slide up) ─────────────────────────────────────────
+const LineReveal = ({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) => (
+  <div style={{ overflow: 'hidden' }}>
+    <motion.div
+      initial={{ y: '110%', opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 1, delay, ease: [0.16, 1, 0.3, 1] }}
     >
-      {text}
-    </motion.span>
-  </span>
+      {children}
+    </motion.div>
+  </div>
 );
 
+// ─── Hero ─────────────────────────────────────────────────────────────────────
 const Hero = () => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const heroRef = useRef<HTMLDivElement>(null);
@@ -84,58 +166,43 @@ const Hero = () => {
     <section
       ref={heroRef}
       className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
-      style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(124,58,237,0.15) 0%, transparent 60%)' }}
+      style={{ background: 'radial-gradient(ellipse 90% 70% at 50% -10%, rgba(124,58,237,0.2) 0%, transparent 60%)' }}
     >
-      {/* Grid lines */}
+      {/* Dot-grid background */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          backgroundImage: `linear-gradient(rgba(167,139,250,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(167,139,250,0.04) 1px, transparent 1px)`,
-          backgroundSize: '80px 80px',
-          maskImage: 'radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 100%)',
+          backgroundImage: 'radial-gradient(rgba(167,139,250,0.12) 1px, transparent 1px)',
+          backgroundSize: '36px 36px',
+          maskImage: 'radial-gradient(ellipse 70% 60% at 50% 50%, black 30%, transparent 100%)',
         }}
       />
 
-      {/* Floating ambient tech badges */}
-      <div className="absolute inset-0 pointer-events-none hidden lg:block">
-        {FLOATERS.map((f, i) => (
+      {/* Horizontal accent lines */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {[0.3, 0.55, 0.78].map((yp, i) => (
           <motion.div
             key={i}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{
-              opacity: [0, 0.7, 0.7, 0],
-              y: [10, 0, -8, -18],
-            }}
-            transition={{
-              duration: 8,
-              delay: f.delay + 1.5,
-              repeat: Infinity,
-              repeatDelay: 4,
-              ease: 'easeInOut',
-            }}
-            className="absolute text-xs font-semibold px-3 py-1.5 rounded-full"
+            className="absolute w-full h-px"
             style={{
-              left: f.x,
-              top: f.y,
-              background: 'rgba(255,255,255,0.04)',
-              border: `1px solid ${f.color}30`,
-              color: f.color,
-              backdropFilter: 'blur(8px)',
-              boxShadow: `0 0 12px ${f.color}20`,
+              top: `${yp * 100}%`,
+              background: `linear-gradient(90deg, transparent 0%, rgba(167,139,250,${0.08 - i * 0.02}) 30%, rgba(167,139,250,${0.08 - i * 0.02}) 70%, transparent 100%)`,
             }}
-          >
-            {f.text}
-          </motion.div>
+            initial={{ scaleX: 0, opacity: 0 }}
+            animate={{ scaleX: 1, opacity: 1 }}
+            transition={{ duration: 1.2, delay: 0.3 + i * 0.15, ease: [0.22, 1, 0.36, 1] }}
+          />
         ))}
       </div>
 
-      <div className="relative z-10 container-xl w-full pt-28 pb-20">
-        {/* Top badge */}
+      {/* Main content */}
+      <div className="relative z-10 container-xl w-full pt-24 pb-20">
+        {/* Available badge */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="flex justify-center mb-10"
+          transition={{ duration: 0.7, delay: 0.2 }}
+          className="flex justify-center mb-12"
         >
           <div className="label-pill">
             <span className="relative flex h-1.5 w-1.5">
@@ -146,65 +213,70 @@ const Hero = () => {
           </div>
         </motion.div>
 
-        {/* Giant name with parallax */}
-        <div className="text-center mb-6">
+        {/* ── Giant glitch name ─────────────────────── */}
+        <div
+          className="text-center mb-8 relative"
+          style={{
+            transform: `translate(${mousePos.x * -12}px, ${mousePos.y * -6}px)`,
+            transition: 'transform 1s cubic-bezier(0.16, 1, 0.3, 1)',
+          }}
+        >
           <h1
-            className="font-black leading-[0.88] tracking-tighter uppercase text-white"
+            className="font-black leading-[0.85] tracking-tighter uppercase text-white select-none"
             style={{
-              fontSize: 'clamp(72px, 13vw, 200px)',
+              fontSize: 'clamp(68px, 12.5vw, 196px)',
               fontFamily: 'Space Grotesk',
-              transform: `translate(${mousePos.x * -10}px, ${mousePos.y * -5}px)`,
-              transition: 'transform 0.8s cubic-bezier(0.22, 1, 0.36, 1)',
-              textShadow: '0 0 100px rgba(167,139,250,0.12)',
+              textShadow: '0 0 120px rgba(167,139,250,0.1)',
             }}
           >
-            <div className="overflow-hidden">
-              <LetterReveal text="SANJEEV" delay={0.5} />
-            </div>
-            <div className="overflow-hidden" style={{ marginTop: '-0.05em' }}>
-              <LetterReveal text="BHANDARI" delay={0.65} />
-            </div>
+            <LineReveal delay={0.4}>
+              <GlitchName text="SANJEEV" />
+            </LineReveal>
+            <LineReveal delay={0.55}>
+              <GlitchName text="BHANDARI" />
+            </LineReveal>
           </h1>
         </div>
 
-        {/* Role + description */}
-        <div className="text-center mb-12">
+        {/* ── Typewriter role ──────────────────────── */}
+        <div className="text-center mb-4">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 1.0 }}
-            className="text-xl md:text-2xl font-medium mb-6 h-9"
-            style={{ color: 'rgba(255,255,255,0.6)' }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 1.1 }}
+            className="text-xl md:text-2xl h-10 flex items-center justify-center"
+            style={{ color: 'rgba(255,255,255,0.55)' }}
           >
             <Typewriter />
           </motion.div>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 1.1 }}
-            className="text-base md:text-lg max-w-xl mx-auto leading-relaxed"
-            style={{ color: 'rgba(255,255,255,0.4)' }}
-          >
-            Building intelligent systems at the intersection of AI research and
-            real-world impact. Based in Nepal 🇳🇵
-          </motion.p>
         </div>
 
-        {/* CTA buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
+        {/* ── Description ─────────────────────────── */}
+        <motion.p
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 1.2 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-14"
+          transition={{ duration: 0.7, delay: 1.2 }}
+          className="text-center text-base md:text-lg max-w-lg mx-auto leading-relaxed mb-12"
+          style={{ color: 'rgba(255,255,255,0.38)' }}
         >
-          <Magnetic amount={0.3}>
+          Building intelligent systems at the intersection of AI research and
+          real-world impact. Based in Nepal 🇳🇵
+        </motion.p>
+
+        {/* ── CTA buttons ─────────────────────────── */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 1.3 }}
+          className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12"
+        >
+          <Magnetic amount={0.4}>
             <a href="mailto:075bei033.sanjeev@pcampus.edu.np" className="btn-glow">
               <FiMail className="w-4 h-4" />
               Get in Touch
             </a>
           </Magnetic>
-          <Magnetic amount={0.3}>
+          <Magnetic amount={0.4}>
             <a href="#projects" className="btn-outline-glow">
               View My Work
               <FiArrowDown className="w-4 h-4" />
@@ -212,18 +284,18 @@ const Hero = () => {
           </Magnetic>
         </motion.div>
 
-        {/* Social links */}
+        {/* ── Socials ─────────────────────────────── */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 1.3 }}
-          className="flex items-center justify-center gap-3 mb-16"
+          transition={{ duration: 0.6, delay: 1.45 }}
+          className="flex items-center justify-center gap-3 mb-14"
         >
           {[
             { href: 'https://github.com/realsanjeev', icon: <FiGithub className="w-4 h-4" />, label: 'GitHub' },
             { href: 'https://linkedin.com/in/realsanjeev', icon: <FaLinkedinIn className="w-4 h-4" />, label: 'LinkedIn' },
           ].map((s, i) => (
-            <Magnetic key={i} amount={0.3}>
+            <Magnetic key={i} amount={0.35}>
               <a
                 href={s.href}
                 target="_blank"
@@ -238,14 +310,16 @@ const Hero = () => {
                 onMouseEnter={e => {
                   const el = e.currentTarget;
                   el.style.background = 'rgba(167,139,250,0.12)';
-                  el.style.borderColor = 'rgba(167,139,250,0.35)';
+                  el.style.borderColor = 'rgba(167,139,250,0.4)';
                   el.style.color = '#a78bfa';
+                  el.style.transform = 'scale(1.1)';
                 }}
                 onMouseLeave={e => {
                   const el = e.currentTarget;
                   el.style.background = 'rgba(255,255,255,0.04)';
                   el.style.borderColor = 'rgba(255,255,255,0.1)';
                   el.style.color = 'rgba(255,255,255,0.45)';
+                  el.style.transform = 'scale(1)';
                 }}
               >
                 {s.icon}
@@ -253,16 +327,16 @@ const Hero = () => {
             </Magnetic>
           ))}
           <div className="w-px h-5 mx-1" style={{ background: 'rgba(255,255,255,0.1)' }} />
-          <span className="text-sm" style={{ color: 'rgba(255,255,255,0.25)' }}>Nepal 🇳🇵</span>
+          <span className="text-sm" style={{ color: 'rgba(255,255,255,0.22)' }}>Nepal 🇳🇵</span>
         </motion.div>
 
-        {/* Stats row */}
+        {/* ── Stats ───────────────────────────────── */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 1.35 }}
-          className="flex items-center justify-center gap-10 md:gap-16 pt-10"
-          style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}
+          transition={{ duration: 0.6, delay: 1.5 }}
+          className="flex items-center justify-center gap-12 md:gap-20 pt-10"
+          style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}
         >
           {[
             { value: '3+', label: 'Years Exp.' },
@@ -271,12 +345,12 @@ const Hero = () => {
           ].map((s, i) => (
             <div key={i} className="text-center">
               <div
-                className="text-3xl md:text-4xl font-black gradient-text-purple"
+                className="text-3xl md:text-4xl font-black gradient-text-purple mb-1"
                 style={{ fontFamily: 'Space Grotesk' }}
               >
                 {s.value}
               </div>
-              <div className="text-xs mt-1 font-medium" style={{ color: 'rgba(255,255,255,0.3)' }}>
+              <div className="text-xs font-medium tracking-wide" style={{ color: 'rgba(255,255,255,0.28)' }}>
                 {s.label}
               </div>
             </div>
@@ -285,32 +359,28 @@ const Hero = () => {
       </div>
 
       {/* Scroll indicator */}
-      <motion.div
+      <motion.a
+        href="#about"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.6 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2"
+        transition={{ delay: 1.8 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 group"
       >
-        <a href="#about" className="flex flex-col items-center gap-2 group">
-          <span
-            className="text-[10px] font-semibold tracking-widest uppercase"
-            style={{ color: 'rgba(255,255,255,0.18)' }}
-          >
-            Scroll
-          </span>
-          <div
-            className="w-5 h-8 rounded-full flex items-start justify-center pt-1.5"
-            style={{ border: '1px solid rgba(255,255,255,0.1)' }}
-          >
-            <motion.div
-              className="w-1 h-2 rounded-full"
-              style={{ background: 'rgba(167,139,250,0.8)' }}
-              animate={{ y: [0, 10, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-            />
-          </div>
-        </a>
-      </motion.div>
+        <span className="text-[9px] font-bold tracking-[0.25em] uppercase" style={{ color: 'rgba(255,255,255,0.15)' }}>
+          scroll
+        </span>
+        <div
+          className="w-5 h-8 rounded-full flex items-start justify-center pt-1.5"
+          style={{ border: '1px solid rgba(255,255,255,0.1)' }}
+        >
+          <motion.div
+            className="w-1 h-2 rounded-full"
+            style={{ background: '#a78bfa' }}
+            animate={{ y: [0, 10, 0], opacity: [0.8, 0.3, 0.8] }}
+            transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
+          />
+        </div>
+      </motion.a>
     </section>
   );
 };
