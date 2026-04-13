@@ -12,6 +12,16 @@ const ROLES = [
   'Computer Vision Engineer',
 ];
 
+// Floating ambient elements around the hero
+const FLOATERS = [
+  { text: 'PyTorch', x: '5%', y: '22%', delay: 0.8, color: '#f9a8d4' },
+  { text: 'LLMs', x: '88%', y: '18%', delay: 1.0, color: '#67e8f9' },
+  { text: 'RAG', x: '7%', y: '68%', delay: 1.2, color: '#a78bfa' },
+  { text: 'HuggingFace', x: '82%', y: '64%', delay: 0.9, color: '#86efac' },
+  { text: 'LoRA', x: '76%', y: '36%', delay: 1.3, color: '#fcd34d' },
+  { text: 'FastAPI', x: '12%', y: '45%', delay: 1.1, color: '#67e8f9' },
+];
+
 const Typewriter = () => {
   const [idx, setIdx] = useState(0);
   const [sub, setSub] = useState(0);
@@ -40,21 +50,18 @@ const Typewriter = () => {
   );
 };
 
-// Giant letter reveal
-const LetterReveal = ({ text, delay = 0 }: { text: string; delay?: number }) => {
-  return (
-    <span className="inline-block overflow-hidden">
-      <motion.span
-        className="inline-block"
-        initial={{ y: '105%' }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] }}
-      >
-        {text}
-      </motion.span>
-    </span>
-  );
-};
+const LetterReveal = ({ text, delay = 0 }: { text: string; delay?: number }) => (
+  <span className="inline-block overflow-hidden">
+    <motion.span
+      className="inline-block"
+      initial={{ y: '105%' }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.9, delay, ease: [0.22, 1, 0.36, 1] }}
+    >
+      {text}
+    </motion.span>
+  </span>
+);
 
 const Hero = () => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -79,14 +86,48 @@ const Hero = () => {
       className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
       style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(124,58,237,0.15) 0%, transparent 60%)' }}
     >
-      {/* Floating grid lines */}
-      <div className="absolute inset-0 pointer-events-none"
+      {/* Grid lines */}
+      <div
+        className="absolute inset-0 pointer-events-none"
         style={{
           backgroundImage: `linear-gradient(rgba(167,139,250,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(167,139,250,0.04) 1px, transparent 1px)`,
           backgroundSize: '80px 80px',
           maskImage: 'radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 100%)',
         }}
       />
+
+      {/* Floating ambient tech badges */}
+      <div className="absolute inset-0 pointer-events-none hidden lg:block">
+        {FLOATERS.map((f, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{
+              opacity: [0, 0.7, 0.7, 0],
+              y: [10, 0, -8, -18],
+            }}
+            transition={{
+              duration: 8,
+              delay: f.delay + 1.5,
+              repeat: Infinity,
+              repeatDelay: 4,
+              ease: 'easeInOut',
+            }}
+            className="absolute text-xs font-semibold px-3 py-1.5 rounded-full"
+            style={{
+              left: f.x,
+              top: f.y,
+              background: 'rgba(255,255,255,0.04)',
+              border: `1px solid ${f.color}30`,
+              color: f.color,
+              backdropFilter: 'blur(8px)',
+              boxShadow: `0 0 12px ${f.color}20`,
+            }}
+          >
+            {f.text}
+          </motion.div>
+        ))}
+      </div>
 
       <div className="relative z-10 container-xl w-full pt-28 pb-20">
         {/* Top badge */}
@@ -105,16 +146,16 @@ const Hero = () => {
           </div>
         </motion.div>
 
-        {/* Giant name */}
+        {/* Giant name with parallax */}
         <div className="text-center mb-6">
           <h1
             className="font-black leading-[0.88] tracking-tighter uppercase text-white"
             style={{
               fontSize: 'clamp(72px, 13vw, 200px)',
               fontFamily: 'Space Grotesk',
-              transform: `translate(${mousePos.x * -8}px, ${mousePos.y * -4}px)`,
-              transition: 'transform 0.6s ease-out',
-              textShadow: '0 0 80px rgba(167,139,250,0.15)',
+              transform: `translate(${mousePos.x * -10}px, ${mousePos.y * -5}px)`,
+              transition: 'transform 0.8s cubic-bezier(0.22, 1, 0.36, 1)',
+              textShadow: '0 0 100px rgba(167,139,250,0.12)',
             }}
           >
             <div className="overflow-hidden">
@@ -247,19 +288,19 @@ const Hero = () => {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+        transition={{ delay: 1.6 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2"
       >
         <a href="#about" className="flex flex-col items-center gap-2 group">
           <span
-            className="text-[10px] font-semibold tracking-widest uppercase transition-colors"
-            style={{ color: 'rgba(255,255,255,0.2)' }}
+            className="text-[10px] font-semibold tracking-widest uppercase"
+            style={{ color: 'rgba(255,255,255,0.18)' }}
           >
             Scroll
           </span>
           <div
             className="w-5 h-8 rounded-full flex items-start justify-center pt-1.5"
-            style={{ border: '1px solid rgba(255,255,255,0.12)' }}
+            style={{ border: '1px solid rgba(255,255,255,0.1)' }}
           >
             <motion.div
               className="w-1 h-2 rounded-full"
