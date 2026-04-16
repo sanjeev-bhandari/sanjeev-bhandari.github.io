@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Navigation from '@/components/Navigation';
 import Hero from '@/components/Hero';
 import About from '@/components/About';
@@ -6,77 +7,104 @@ import Experience from '@/components/Experience';
 import Projects from '@/components/Projects';
 import Blog from '@/components/Blog';
 import Contact from '@/components/Contact';
-import { RevealOnScroll } from "@/components/ui/reveal-on-scroll";
-import MouseGlow from '@/components/ui/MouseGlow';
-import CustomCursor from '@/components/ui/CustomCursor';
-import BackgroundMesh from '@/components/ui/BackgroundMesh';
 import Footer from '@/components/Footer';
+import BackgroundMesh from '@/components/ui/BackgroundMesh';
+import CustomCursor from '@/components/ui/CustomCursor';
+import MouseGlow from '@/components/ui/MouseGlow';
+import LoadingScreen from '@/components/ui/LoadingScreen';
+import SkillsMarquee from '@/components/ui/SkillsMarquee';
+
+const BackToTop = ({ visible }: { visible: boolean }) => (
+  <AnimatePresence>
+    {visible && (
+      <motion.button
+        initial={{ opacity: 0, y: 16, scale: 0.8 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 16, scale: 0.8 }}
+        transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        aria-label="Back to top"
+        className="fixed bottom-6 right-6 z-50 w-11 h-11 rounded-full flex items-center justify-center group"
+        style={{
+          background: 'rgba(234,88,12,0.15)',
+          border: '1px solid rgba(251,146,60,0.25)',
+          backdropFilter: 'blur(12px)',
+          boxShadow: '0 4px 24px rgba(0,0,0,0.3)',
+        }}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        <svg
+          className="w-4 h-4 transition-transform group-hover:-translate-y-0.5"
+          style={{ color: '#fb923c' }}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+        </svg>
+      </motion.button>
+    )}
+  </AnimatePresence>
+);
 
 const Index = () => {
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const [loaded, setLoaded] = useState(false);
+  const [scrollPct, setScrollPct] = useState(0);
+  const [showBackTop, setShowBackTop] = useState(false);
+
+  const onLoadComplete = useCallback(() => setLoaded(true), []);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = (window.scrollY / totalHeight) * 100;
-      setScrollProgress(progress);
+    if (!loaded) return;
+    const onScroll = () => {
+      const el = document.documentElement;
+      const pct = el.scrollTop / (el.scrollHeight - el.clientHeight);
+      setScrollPct(pct * 100);
+      setShowBackTop(el.scrollTop > 600);
     };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [loaded]);
 
   return (
-    <div className="min-h-screen bg-transparent relative scroll-snap-container">
-      {/* Modern scroll progress indicator */}
-      <div
-        className="fixed top-0 left-0 h-0.5 z-[100] transition-all duration-150 ease-out"
-        style={{ 
-          width: `${scrollProgress}%`,
-          background: 'linear-gradient(90deg, #6366f1, #a855f7, #ec4899)'
-        }}
-      />
-      
-      <BackgroundMesh />
-      <CustomCursor />
-      <MouseGlow />
-      <Navigation />
-      
-      <main>
-        <Hero />
-        
-        <div id="about" className="scroll-snap-item">
-          <RevealOnScroll delay={100}>
+    <div
+      className="noise min-h-screen relative"
+      style={{ background: '#030012' }}
+    >
+      <LoadingScreen onComplete={onLoadComplete} />
+
+      {loaded && (
+        <>
+          {/* Scroll progress bar */}
+          <div
+            className="fixed top-0 left-0 h-[2px] z-[100]"
+            style={{
+              width: `${scrollPct}%`,
+              background: 'linear-gradient(90deg, #ea580c, #fb923c, #fbbf24)',
+              boxShadow: '0 0 8px rgba(251,146,60,0.8)',
+              transition: 'width 0.1s linear',
+            }}
+          />
+
+          <BackgroundMesh />
+          <MouseGlow />
+          <CustomCursor />
+          <Navigation />
+          <BackToTop visible={showBackTop} />
+
+          <main>
+            <Hero />
+            <SkillsMarquee />
             <About />
-          </RevealOnScroll>
-        </div>
-        
-        <div id="experience" className="scroll-snap-item">
-          <RevealOnScroll delay={100}>
             <Experience />
-          </RevealOnScroll>
-        </div>
-        
-        <div id="projects" className="scroll-snap-item">
-          <RevealOnScroll delay={100}>
             <Projects />
-          </RevealOnScroll>
-        </div>
-        
-        <div id="blog" className="scroll-snap-item">
-          <RevealOnScroll delay={100}>
             <Blog />
-          </RevealOnScroll>
-        </div>
-        
-        <div id="contact" className="scroll-snap-item">
-          <RevealOnScroll delay={100}>
             <Contact />
-          </RevealOnScroll>
-        </div>
-      </main>
-      
-      <Footer />
+          </main>
+          <Footer />
+        </>
+      )}
     </div>
   );
 };

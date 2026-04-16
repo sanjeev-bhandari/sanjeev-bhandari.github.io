@@ -1,124 +1,230 @@
+import { useRef, useState, useEffect } from 'react';
+import { motion, useInView } from 'framer-motion';
 import { SKILLS } from '@/data/portfolio';
-import { FiCode, FiCpu, FiDatabase, FiZap } from 'react-icons/fi';
+import ScrambleText from '@/components/ui/ScrambleText';
 
-const About = () => {
-  const icons = [FiCpu, FiCode, FiDatabase, FiZap];
+const skills_flat = [
+  'Python', 'PyTorch', 'HuggingFace', 'LangChain', 'FastAPI', 'Docker',
+  'LLMs', 'RAG', 'LoRA', 'Computer Vision', 'NLP', 'BERT', 'OpenCV',
+  'TensorFlow', 'Scikit-learn', 'Linux', 'Git', 'Jenkins', 'Neo4j',
+  'Streamlit', 'Flask', 'Django', 'C', 'Rust', 'JavaScript',
+];
+
+const AnimCounter = ({ end, suffix = '' }: { end: number | string; suffix?: string }) => {
+  const [count, setCount] = useState(0);
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true });
+  const isSymbol = typeof end === 'string';
+
+  useEffect(() => {
+    if (!inView || isSymbol) return;
+    const n = end as number;
+    let start = 0;
+    const timer = setInterval(() => {
+      start++;
+      setCount(start);
+      if (start >= n) clearInterval(timer);
+    }, 1500 / n);
+    return () => clearInterval(timer);
+  }, [inView, end, isSymbol]);
 
   return (
-    <section className="section-padding bg-white relative overflow-hidden" id="about">
-      {/* Background decoration */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-full blur-3xl opacity-60 -translate-y-1/2 translate-x-1/2"></div>
-      <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-full blur-3xl opacity-60 translate-y-1/2 -translate-x-1/2"></div>
+    <span ref={ref}>{isSymbol ? end : count}{suffix}</span>
+  );
+};
 
-      <div className="section-container relative">
-        {/* Section Header */}
-        <div className="text-center mb-16">
-          <span className="inline-block px-4 py-1.5 bg-gray-100 text-gray-600 text-sm font-medium rounded-full mb-4">
-            About Me
-          </span>
-          <h2 className="heading-xl text-gray-900 mb-4">
-            Passionate about building
-            <span className="gradient-text"> intelligent systems</span>
+const About = () => {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, amount: 0.1 });
+
+  return (
+    <section id="about" className="section-py relative" ref={ref}>
+      {/* Section glow */}
+      <div className="absolute inset-x-0 top-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(251,146,60,0.3), transparent)' }} />
+
+      <div className="container-xl">
+        {/* Header */}
+        <div className="mb-20">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6 }}
+            className="flex items-center gap-4 mb-4"
+          >
+            <span className="label-pill">About</span>
+            <div className="flex-1 h-px" style={{ background: 'rgba(251,146,60,0.15)' }} />
+          </motion.div>
+          <h2
+            className="text-4xl md:text-6xl lg:text-7xl font-black text-white tracking-tight leading-[0.95]"
+            style={{ fontFamily: 'Space Grotesk' }}
+          >
+            <div style={{ overflow: 'hidden' }}>
+              <motion.div
+                initial={{ y: '110%' }} animate={inView ? { y: 0 } : {}}
+                transition={{ duration: 0.9, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <ScrambleText text="Passionate about" trigger={inView} delay={150} framesPerChar={5} />
+              </motion.div>
+            </div>
+            <br />
+            <div style={{ overflow: 'hidden' }}>
+              <motion.div
+                initial={{ y: '110%' }} animate={inView ? { y: 0 } : {}}
+                transition={{ duration: 0.9, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <span className="gradient-text">
+                  <ScrambleText text="intelligent systems" trigger={inView} delay={400} framesPerChar={5} />
+                </span>
+              </motion.div>
+            </div>
           </h2>
-          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            Transforming ideas into reality through the power of machine learning and AI
-          </p>
         </div>
 
-        <div className="grid lg:grid-cols-5 gap-12 lg:gap-16 items-start">
-          {/* Left Column - About Text */}
-          <div className="lg:col-span-3 space-y-6">
-            <div className="prose prose-lg max-w-none">
-              <p className="text-gray-600 text-lg leading-relaxed">
-                I'm a <span className="font-semibold text-gray-900">Machine Learning Engineer</span> with 
-                a deep passion for advancing the field of artificial intelligence. My work focuses on 
-                developing innovative ML solutions that bridge the gap between cutting-edge research 
-                and real-world applications.
-              </p>
-              <p className="text-gray-600 text-lg leading-relaxed">
-                With a background in both theoretical foundations and practical implementation, I enjoy 
-                tackling complex challenges in <span className="font-medium text-gray-900">computer vision</span>, 
-                <span className="font-medium text-gray-900"> natural language processing</span>, and 
-                <span className="font-medium text-gray-900"> deep learning</span>. I believe that AI has 
-                the potential to transform industries and improve lives worldwide.
-              </p>
-              <p className="text-gray-600 text-lg leading-relaxed">
-                When I'm not coding or training models, you'll find me writing technical articles on Medium, 
-                diving into the latest research papers, experimenting with low-level programming, and 
-                continuously exploring new technologies.
-              </p>
-            </div>
-
-            {/* Quick Stats */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-8">
+        <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-start">
+          {/* Left */}
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.7, delay: 0.2 }}
+          >
+            <div className="space-y-5 mb-10">
               {[
-                { value: '3+', label: 'Years Exp.' },
-                { value: '10+', label: 'Projects' },
-                // { value: '5+', label: 'Papers' },
-                { value: '∞', label: 'Curiosity' },
-              ].map((stat, i) => (
-                <div 
-                  key={i} 
-                  className="text-center p-4 rounded-2xl bg-gray-50 hover:bg-gray-100 transition-colors"
+                <>I'm a <strong className="text-white">Machine Learning Engineer</strong> specializing in LLMs, computer vision, and NLP. I build production-ready AI systems that bridge the gap between cutting-edge research and real-world impact.</>,
+                <>Currently at <strong className="text-white">TAI Inc.</strong>, I develop document verification systems, RAG applications, and facial recognition services — working with international teams to deliver scalable ML solutions.</>,
+                <>Outside of work, I write technical articles on Medium, explore low-level programming in C and Rust, and dive into the latest AI research papers.</>,
+              ].map((p, i) => (
+                <motion.p
+                  key={i}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={inView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.6, delay: 0.3 + i * 0.1 }}
+                  className="text-base leading-relaxed"
+                  style={{ color: 'rgba(255,255,255,0.5)' }}
                 >
-                  <div className="text-2xl font-bold text-gray-900">{stat.value}</div>
-                  <div className="text-sm text-gray-500 mt-1">{stat.label}</div>
-                </div>
+                  {p}
+                </motion.p>
               ))}
             </div>
-          </div>
 
-          {/* Right Column - Skills */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Research Interests */}
-            <div className="gradient-card rounded-2xl p-6 shadow-xl">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center">
-                  <FiCpu className="w-5 h-5 text-white" />
+            {/* Stats */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.6 }}
+              className="grid grid-cols-3 gap-4"
+            >
+              {[
+                { value: 3, suffix: '+', label: 'Years Experience' },
+                { value: 10, suffix: '+', label: 'ML Projects' },
+                { value: '∞', suffix: '', label: 'Curiosity' },
+              ].map((s, i) => (
+                <div
+                  key={i}
+                  className="card-dark rounded-2xl p-5 text-center"
+                >
+                  <div
+                    className="text-3xl font-black mb-1 gradient-text-purple"
+                    style={{ fontFamily: 'Space Grotesk' }}
+                  >
+                    <AnimCounter end={s.value} suffix={s.suffix} />
+                  </div>
+                  <div className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                    {s.label}
+                  </div>
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900">{SKILLS[0].category}</h3>
+              ))}
+            </motion.div>
+          </motion.div>
+
+          {/* Right: Skills & Research */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.7, delay: 0.3 }}
+            className="space-y-6"
+          >
+            {/* Research interests */}
+            <div className="card-dark rounded-2xl p-6">
+              <div className="flex items-center gap-3 mb-5">
+                <div
+                  className="w-8 h-8 rounded-lg flex items-center justify-center"
+                  style={{ background: 'linear-gradient(135deg, #ea580c, #5b21b6)' }}
+                >
+                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                  </svg>
+                </div>
+                <h3 className="text-sm font-bold text-white" style={{ fontFamily: 'Space Grotesk' }}>Research Interests</h3>
               </div>
               <div className="flex flex-wrap gap-2">
-                {(SKILLS[0].items as string[]).map((interest, i) => (
-                  <span
-                    key={i}
-                    className="tag tag-primary hover:bg-indigo-100 cursor-default"
+                {(SKILLS[0].items as string[]).map((item, i) => (
+                  <motion.span
+                    key={item}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={inView ? { opacity: 1, scale: 1 } : {}}
+                    transition={{ delay: 0.5 + i * 0.06 }}
+                    className="tag-dark"
                   >
-                    {interest}
-                  </span>
+                    {item}
+                  </motion.span>
                 ))}
               </div>
             </div>
 
-            {/* Technical Skills */}
-            <div className="gradient-card rounded-2xl p-6 shadow-xl">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
-                  <FiCode className="w-5 h-5 text-white" />
+            {/* Tech stack */}
+            <div className="card-dark rounded-2xl p-6">
+              <div className="flex items-center gap-3 mb-5">
+                <div
+                  className="w-8 h-8 rounded-lg flex items-center justify-center"
+                  style={{ background: 'linear-gradient(135deg, #0891b2, #0e7490)' }}
+                >
+                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                  </svg>
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900">{SKILLS[1].category}</h3>
+                <h3 className="text-sm font-bold text-white" style={{ fontFamily: 'Space Grotesk' }}>Tech Stack</h3>
               </div>
-              <div className="space-y-4">
-                {(SKILLS[1].items as { name: string, value: string }[]).map((skill, i) => {
-                  const IconComponent = icons[i % icons.length];
-                  return (
-                    <div key={skill.name} className="group">
-                      <div className="flex items-center gap-2 mb-1">
-                        <IconComponent className="w-4 h-4 text-gray-400 group-hover:text-indigo-500 transition-colors" />
-                        <h4 className="font-medium text-gray-900">{skill.name}</h4>
-                      </div>
-                      <p className="text-sm text-gray-500 pl-6">{skill.value}</p>
-                    </div>
-                  );
-                })}
+              <div className="flex flex-wrap gap-2">
+                {skills_flat.map((skill, i) => (
+                  <motion.span
+                    key={skill}
+                    initial={{ opacity: 0 }}
+                    animate={inView ? { opacity: 1 } : {}}
+                    transition={{ delay: 0.6 + i * 0.04 }}
+                    className="text-xs px-2.5 py-1 rounded-full font-mono"
+                    style={{
+                      background: 'rgba(6,182,212,0.07)',
+                      border: '1px solid rgba(6,182,212,0.15)',
+                      color: 'rgba(253,186,116,0.8)',
+                    }}
+                  >
+                    {skill}
+                  </motion.span>
+                ))}
               </div>
             </div>
-          </div>
+
+            {/* Technical Skills list */}
+            <div className="card-dark rounded-2xl p-6 space-y-4">
+              {(SKILLS[1].items as { name: string; value: string }[]).map((skill, i) => (
+                <motion.div
+                  key={skill.name}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={inView ? { opacity: 1, x: 0 } : {}}
+                  transition={{ delay: 0.7 + i * 0.08 }}
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-xs font-semibold" style={{ color: 'rgba(255,255,255,0.7)' }}>{skill.name}</span>
+                  </div>
+                  <p className="text-xs font-mono" style={{ color: 'rgba(255,255,255,0.3)' }}>{skill.value}</p>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
         </div>
       </div>
     </section>
   );
 };
-
 
 export default About;

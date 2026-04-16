@@ -1,96 +1,141 @@
-import React from 'react';
+import { motion } from 'framer-motion';
 import Magnetic from './ui/Magnetic';
 import { FaGithub, FaLinkedinIn } from 'react-icons/fa6';
-import { SiHuggingface } from 'react-icons/si';
+import { SiHuggingface, SiMedium } from 'react-icons/si';
 import { FiMail } from 'react-icons/fi';
 
+const socials = [
+  { href: 'https://github.com/realsanjeev', icon: <FaGithub className="w-4 h-4" />, label: 'GitHub' },
+  { href: 'https://linkedin.com/in/realsanjeev', icon: <FaLinkedinIn className="w-4 h-4" />, label: 'LinkedIn' },
+  { href: 'https://medium.com/@realsanjeev', icon: <SiMedium className="w-4 h-4" />, label: 'Medium' },
+  { href: 'https://huggingface.co/realsanjeev', icon: <SiHuggingface className="w-4 h-4" />, label: 'HuggingFace' },
+  { href: 'mailto:075bei033.sanjeev@pcampus.edu.np', icon: <FiMail className="w-4 h-4" />, label: 'Email' },
+];
+
+const navLinks = [
+  { name: 'About', href: '#about' },
+  { name: 'Experience', href: '#experience' },
+  { name: 'Projects', href: '#projects' },
+  { name: 'Blog', href: '#blog' },
+  { name: 'Contact', href: '#contact' },
+];
+
 const Footer = () => {
-  const currentYear = new Date().getFullYear();
-
-  const socialLinks = [
-    { icon: <FaGithub />, href: "https://github.com/realsanjeev", label: "GitHub" },
-    { icon: <FaLinkedinIn />, href: "https://linkedin.com/in/realsanjeev", label: "LinkedIn" },
-    { icon: <SiHuggingface />, href: "https://huggingface.co/sanjeev-bhandari01", label: "Hugging Face" },
-    { icon: <FiMail />, href: "mailto:075bei033.sanjeev@pcampus.edu.np", label: "Email" },
-  ];
-
-  const quickLinks = [
-    { name: 'About', href: '#about' },
-    { name: 'Experience', href: '#experience' },
-    { name: 'Projects', href: '#projects' },
-    { name: 'Blog', href: '#blog' },
-    { name: 'Contact', href: '#contact' },
-  ];
-
   return (
-    <footer className="relative overflow-hidden bg-gray-50 border-t border-gray-100">
-      {/* Background decoration */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
-      
-      <div className="section-container py-16 md:py-20">
-        <div className="grid md:grid-cols-3 gap-12 md:gap-8 items-start">
-          {/* Brand */}
-          <div className="text-center md:text-left">
-            <div className="flex items-center justify-center md:justify-start gap-3 mb-4">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-gray-900 to-gray-700 flex items-center justify-center shadow-lg">
-                <span className="text-white font-bold text-lg">S</span>
+    <footer className="relative pt-16 pb-10 overflow-hidden">
+      <div
+        className="absolute inset-x-0 top-0 h-px"
+        style={{ background: 'linear-gradient(90deg, transparent, rgba(251,146,60,0.22), transparent)' }}
+      />
+
+      {/* Big background text */}
+      <div
+        className="absolute bottom-0 left-1/2 -translate-x-1/2 text-[12vw] font-black leading-none select-none pointer-events-none whitespace-nowrap"
+        style={{
+          fontFamily: 'Space Grotesk',
+          color: 'rgba(251,146,60,0.04)',
+          letterSpacing: '-0.03em',
+        }}
+      >
+        SANJEEV
+      </div>
+
+      <div className="container-xl relative">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-10 mb-12">
+          {/* Left */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="flex items-center gap-3 mb-3">
+              <div
+                className="w-9 h-9 rounded-xl flex items-center justify-center"
+                style={{ background: 'linear-gradient(135deg, #ea580c, #c2410c)' }}
+              >
+                <span className="text-white font-bold text-lg" style={{ fontFamily: 'Space Grotesk' }}>S</span>
               </div>
-              <span className="font-bold text-xl text-gray-900">Sanjeev Bhandari</span>
+              <span className="font-bold text-white text-sm" style={{ fontFamily: 'Space Grotesk' }}>Sanjeev Bhandari</span>
             </div>
-            <p className="text-gray-500 text-sm leading-relaxed max-w-xs mx-auto md:mx-0">
-              Building the future of Machine Learning & AI through innovative solutions and research.
+            <p className="text-xs max-w-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>
+              ML Engineer building intelligent systems at the intersection of AI research and real-world impact.
             </p>
-          </div>
+          </motion.div>
 
-          {/* Quick Links */}
-          <div className="text-center">
-            <h3 className="font-semibold text-gray-900 mb-4">Quick Links</h3>
-            <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2">
-              {quickLinks.map((link) => (
+          {/* Nav links */}
+          <motion.nav
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="flex flex-wrap gap-x-6 gap-y-2"
+          >
+            {navLinks.map(l => (
+              <a
+                key={l.name}
+                href={l.href}
+                className="text-sm transition-colors"
+                style={{ color: 'rgba(255,255,255,0.35)' }}
+                onMouseEnter={e => (e.currentTarget.style.color = '#fb923c')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.35)')}
+              >
+                {l.name}
+              </a>
+            ))}
+          </motion.nav>
+
+          {/* Socials */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="flex items-center gap-2"
+          >
+            {socials.map((s, i) => (
+              <Magnetic key={i} amount={0.3}>
                 <a
-                  key={link.name}
-                  href={link.href}
-                  className="text-sm text-gray-500 hover:text-indigo-600 transition-colors animated-underline"
+                  href={s.href}
+                  target={s.href.startsWith('mailto:') ? undefined : '_blank'}
+                  rel="noopener noreferrer"
+                  aria-label={s.label}
+                  className="w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300"
+                  style={{
+                    background: 'rgba(255,255,255,0.04)',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                    color: 'rgba(255,255,255,0.4)',
+                  }}
+                  onMouseEnter={e => {
+                    const el = e.currentTarget;
+                    el.style.background = 'rgba(251,146,60,0.1)';
+                    el.style.borderColor = 'rgba(251,146,60,0.25)';
+                    el.style.color = '#fb923c';
+                  }}
+                  onMouseLeave={e => {
+                    const el = e.currentTarget;
+                    el.style.background = 'rgba(255,255,255,0.04)';
+                    el.style.borderColor = 'rgba(255,255,255,0.08)';
+                    el.style.color = 'rgba(255,255,255,0.4)';
+                  }}
                 >
-                  {link.name}
+                  {s.icon}
                 </a>
-              ))}
-            </nav>
-          </div>
-
-          {/* Social Links */}
-          <div className="text-center md:text-right">
-            <h3 className="font-semibold text-gray-900 mb-4">Connect</h3>
-            <div className="flex justify-center md:justify-end gap-3">
-              {socialLinks.map((social, idx) => (
-                <Magnetic key={idx} amount={0.2}>
-                  <a
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-10 h-10 rounded-xl bg-white border border-gray-200 flex items-center justify-center text-gray-500 hover:text-indigo-600 hover:border-indigo-200 hover:bg-indigo-50 transition-all duration-300 shadow-sm"
-                    aria-label={social.label}
-                  >
-                    {social.icon}
-                  </a>
-                </Magnetic>
-              ))}
-            </div>
-          </div>
+              </Magnetic>
+            ))}
+          </motion.div>
         </div>
 
-        {/* Divider */}
-        <div className="my-10 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
-
-        {/* Bottom */}
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-500">
-          <p>
-            © {currentYear} Sanjeev Bhandari. All rights reserved.
+        {/* Bottom bar */}
+        <div
+          className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-6"
+          style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}
+        >
+          <p className="text-xs" style={{ color: 'rgba(255,255,255,0.2)' }}>
+            © {new Date().getFullYear()} Sanjeev Bhandari. All rights reserved.
           </p>
-          <p className="flex items-center gap-1">
-            Designed with 
-            <span className="text-red-500 animate-pulse">( ◡̀_◡́)ᕤ</span> 
-             passion
+          <p className="text-xs" style={{ color: 'rgba(255,255,255,0.2)' }}>
+            Built with React + Framer Motion
           </p>
         </div>
       </div>

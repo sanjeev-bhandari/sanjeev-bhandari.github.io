@@ -1,91 +1,151 @@
-import { EXPERIENCES } from "@/data/portfolio";
-import { FiBriefcase, FiCalendar, FiMapPin } from "react-icons/fi";
+import { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
+import { EXPERIENCES } from '@/data/portfolio';
+import ScrambleText from '@/components/ui/ScrambleText';
 
 const Experience = () => {
-  const experiences = EXPERIENCES;
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, amount: 0.05 });
 
   return (
-    <section className="section-padding relative overflow-hidden" id="experience">
-      {/* Background decoration */}
-      <div className="absolute inset-0 bg-gradient-to-b from-gray-50/50 to-white pointer-events-none"></div>
-      
-      <div className="section-container relative">
-        {/* Section Header */}
-        <div className="text-center mb-16">
-          <span className="inline-block px-4 py-1.5 bg-gray-100 text-gray-600 text-sm font-medium rounded-full mb-4">
-            Experience
-          </span>
-          <h2 className="heading-xl text-gray-900 mb-4">
-            Professional <span className="gradient-text">Journey</span>
+    <section id="experience" className="section-py relative" ref={ref}>
+      <div className="absolute inset-x-0 top-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(251,146,60,0.2), transparent)' }} />
+
+      <div className="container-xl">
+        <div className="mb-20">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6 }}
+            className="flex items-center gap-4 mb-4"
+          >
+            <span className="label-pill">Journey</span>
+            <div className="flex-1 h-px" style={{ background: 'rgba(251,146,60,0.12)' }} />
+          </motion.div>
+          <h2
+            className="text-4xl md:text-6xl lg:text-7xl font-black text-white tracking-tight leading-[0.95]"
+            style={{ fontFamily: 'Space Grotesk' }}
+          >
+            <div style={{ overflow: 'hidden' }}>
+              <motion.div
+                initial={{ y: '110%' }} animate={inView ? { y: 0 } : {}}
+                transition={{ duration: 0.9, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <ScrambleText text="Work" trigger={inView} delay={150} framesPerChar={5} />
+              </motion.div>
+            </div>
+            <br />
+            <div style={{ overflow: 'hidden' }}>
+              <motion.div
+                initial={{ y: '110%' }} animate={inView ? { y: 0 } : {}}
+                transition={{ duration: 0.9, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <span className="gradient-text">
+                  <ScrambleText text="Experience" trigger={inView} delay={400} framesPerChar={5} />
+                </span>
+              </motion.div>
+            </div>
           </h2>
-          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            Building expertise through impactful roles and meaningful projects
-          </p>
         </div>
 
-        {/* Timeline */}
-        <div className="max-w-4xl mx-auto">
-          <div className="relative">
-            {/* Timeline line */}
-            <div className="absolute left-0 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-indigo-200 via-purple-200 to-pink-200 transform md:-translate-x-1/2"></div>
+        <div className="relative">
+          <div
+            className="absolute left-[18px] md:left-1/2 top-0 bottom-0 w-px"
+            style={{
+              background: 'linear-gradient(180deg, rgba(251,146,60,0.5) 0%, rgba(251,146,60,0.15) 70%, transparent 100%)',
+              transform: 'translateX(-50%)',
+            }}
+          />
 
-            {/* Experience items */}
-            <div className="space-y-12">
-              {experiences.map((exp, index) => (
-                <div 
-                  key={index}
-                  className={`relative flex flex-col md:flex-row gap-8 ${
-                    index % 2 === 0 ? 'md:flex-row-reverse' : ''
+          <div className="space-y-12 md:space-y-20">
+            {EXPERIENCES.map((exp, i) => {
+              const isLeft = i % 2 === 0;
+              return (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, x: isLeft ? -40 : 40, y: 20 }}
+                  animate={inView ? { opacity: 1, x: 0, y: 0 } : {}}
+                  transition={{ duration: 0.7, delay: 0.2 + i * 0.12 }}
+                  className={`relative flex flex-col md:items-start gap-0 ${
+                    isLeft ? 'md:flex-row' : 'md:flex-row-reverse'
                   }`}
                 >
-                  {/* Timeline dot */}
-                  <div className="absolute left-0 md:left-1/2 w-4 h-4 bg-white border-4 border-indigo-500 rounded-full transform -translate-x-1/2 mt-8 z-10 shadow-lg shadow-indigo-500/20"></div>
-
-                  {/* Content */}
-                  <div className={`flex-1 pl-8 md:pl-0 ${index % 2 === 0 ? 'md:pr-16' : 'md:pl-16'}`}>
-                    <div className="gradient-card rounded-2xl p-6 md:p-8 shadow-xl card-hover border-gradient">
-                      {/* Header */}
-                      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
-                        <div>
-                          <h3 className="text-xl font-bold text-gray-900 mb-1">{exp.title}</h3>
-                          <div className="flex items-center gap-2 text-indigo-600 font-medium">
-                            <FiBriefcase className="w-4 h-4" />
-                            <span>{exp.company}</span>
-                          </div>
-                        </div>
-                        <div className="flex flex-col sm:items-end gap-1 text-sm text-gray-500">
-                          <div className="flex items-center gap-1.5">
-                            <FiCalendar className="w-4 h-4" />
-                            <span>{exp.period}</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Description */}
-                      <p className="text-gray-600 mb-6 leading-relaxed">{exp.description}</p>
-
-                      {/* Achievements */}
-                      <div>
-                        <h4 className="text-sm font-semibold text-gray-900 mb-3 uppercase tracking-wider">
-                          Key Achievements
-                        </h4>
-                        <ul className="space-y-2">
-                          {exp.achievements.map((achievement, i) => (
-                            <li key={i} className="flex items-start gap-3 text-gray-600">
-                              <span className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 mt-2 flex-shrink-0"></span>
-                              <span className="text-sm leading-relaxed">{achievement}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
+                  {/* Dot */}
+                  <div className="absolute left-0 md:left-1/2 top-5 z-10 w-[37px] flex justify-center md:-translate-x-1/2">
+                    <div className="relative">
+                      <div
+                        className="w-3.5 h-3.5 rounded-full"
+                        style={{ background: 'linear-gradient(135deg, #fb923c, #ea580c)', boxShadow: '0 0 12px rgba(251,146,60,0.7)' }}
+                      />
+                      <div
+                        className="absolute inset-0 rounded-full animate-ping opacity-40"
+                        style={{ background: 'rgba(251,146,60,0.5)' }}
+                      />
                     </div>
                   </div>
 
-                  {/* Empty space for timeline alignment */}
-                  <div className="hidden md:block flex-1"></div>
-                </div>
-              ))}
-            </div>
+                  {/* Content half */}
+                  <div className={`pl-12 md:pl-0 w-full md:w-[calc(50%-2rem)] ${isLeft ? 'md:pr-10' : 'md:pl-10'}`}>
+                    <div className={`flex mb-3 ${isLeft ? 'md:justify-end' : ''}`}>
+                      <span
+                        className="text-xs font-bold px-3 py-1.5 rounded-full font-mono"
+                        style={{
+                          background: 'rgba(251,146,60,0.08)',
+                          border: '1px solid rgba(251,146,60,0.2)',
+                          color: 'rgba(251,146,60,0.9)',
+                        }}
+                      >
+                        {exp.period}
+                      </span>
+                    </div>
+
+                    <div className={`card-dark rounded-2xl p-6 group hover:shadow-2xl transition-all duration-500 ${isLeft ? 'md:text-right' : ''}`}>
+                      <div className={`flex items-center gap-2 mb-3 ${isLeft ? 'md:justify-end' : ''}`}>
+                        <span
+                          className="text-xs font-bold px-2 py-0.5 rounded"
+                          style={{
+                            background: 'rgba(6,182,212,0.1)',
+                            color: 'rgba(6,182,212,0.8)',
+                            border: '1px solid rgba(6,182,212,0.15)',
+                          }}
+                        >
+                          {exp.type}
+                        </span>
+                        <span className="font-semibold text-sm" style={{ color: '#fb923c' }}>{exp.company}</span>
+                      </div>
+
+                      <h3
+                        className="text-lg font-bold text-white mb-2 group-hover:text-purple-300 transition-colors"
+                        style={{ fontFamily: 'Space Grotesk' }}
+                      >
+                        {exp.title}
+                      </h3>
+
+                      {exp.location && (
+                        <p className="text-xs mb-3" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                          📍 {exp.location}
+                        </p>
+                      )}
+
+                      <p className="text-sm leading-relaxed mb-4" style={{ color: 'rgba(255,255,255,0.45)' }}>
+                        {exp.description}
+                      </p>
+
+                      {exp.technologies && (
+                        <div className={`flex flex-wrap gap-1.5 ${isLeft ? 'md:justify-end' : ''}`}>
+                          {exp.technologies.slice(0, 5).map(tech => (
+                            <span key={tech} className="tag-dark" style={{ fontSize: '10px', padding: '3px 8px' }}>{tech}</span>
+                          ))}
+                          {exp.technologies.length > 5 && (
+                            <span className="tag-dark" style={{ fontSize: '10px', padding: '3px 8px' }}>+{exp.technologies.length - 5}</span>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </div>

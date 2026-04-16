@@ -1,127 +1,165 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Magnetic from '@/components/ui/Magnetic';
 
-const Navigation = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
+const navItems = [
+  { name: 'About', href: '#about' },
+  { name: 'Experience', href: '#experience' },
+  { name: 'Projects', href: '#projects' },
+  { name: 'Blog', href: '#blog' },
+  { name: 'Contact', href: '#contact' },
+];
 
-  const navItems = [
-    { name: 'About', href: '#about' },
-    { name: 'Experience', href: '#experience' },
-    { name: 'Projects', href: '#projects' },
-    { name: 'Blog', href: '#blog' },
-    { name: 'Contact', href: '#contact' }
-  ];
+const Navigation = () => {
+  const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState('');
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  useEffect(() => {
+    const ids = navItems.map(n => n.href.slice(1));
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) setActiveSection(e.target.id); });
+    }, { threshold: 0.3, rootMargin: '-80px 0px -60% 0px' });
+    ids.forEach(id => { const el = document.getElementById(id); if (el) observer.observe(el); });
+    return () => observer.disconnect();
   }, []);
 
   return (
-    <nav 
-      className={`fixed top-0 w-full z-50 transition-all duration-500 ${
-        isScrolled 
-          ? 'bg-white/80 backdrop-blur-xl border-b border-gray-200/50 shadow-sm' 
-          : 'bg-transparent'
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 md:h-20">
-          {/* Logo */}
-          <Magnetic amount={0.1}>
-            <a href="#" className="group flex items-center gap-2">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-gray-900 to-gray-700 flex items-center justify-center shadow-lg shadow-gray-900/10 group-hover:shadow-gray-900/20 transition-shadow">
-                <span className="text-white font-bold text-lg">S</span>
-              </div>
-              <span className="font-semibold text-gray-900 text-lg hidden sm:block">
-                Sanjeev Bhandari
-              </span>
-            </a>
-          </Magnetic>
-
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-1">
-            {navItems.map((item, index) => (
-              <Magnetic key={item.name} amount={0.15}>
-                <a
-                  href={item.href}
-                  className="relative px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors group"
-                  style={{ animationDelay: `${index * 50}ms` }}
-                >
-                  {item.name}
-                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full transition-all duration-300 group-hover:w-3/4"></span>
-                </a>
-              </Magnetic>
-            ))}
-          </div>
-
-          {/* CTA Button - Desktop */}
-          <div className="hidden md:block">
-            <Magnetic amount={0.2}>
-              <a
-                href="#contact"
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium rounded-full shadow-lg shadow-gray-900/10 hover:shadow-gray-900/20 transition-all duration-300 hover:-translate-y-0.5"
-              >
-                <span>Let's Talk</span>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
+    <>
+      <motion.nav
+        initial={{ y: -80, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+        className="fixed top-0 w-full z-50 transition-all duration-500"
+        style={{
+          background: scrolled
+            ? 'rgba(12, 11, 9, 0.88)'
+            : 'transparent',
+          backdropFilter: scrolled ? 'blur(20px)' : 'none',
+          borderBottom: scrolled ? '1px solid rgba(255,255,255,0.06)' : 'none',
+        }}
+      >
+        <div className="container-xl">
+          <div className="flex items-center justify-between h-16 md:h-20">
+            {/* Logo */}
+            <Magnetic amount={0.1}>
+              <a href="#" className="group flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl flex items-center justify-center relative overflow-hidden"
+                  style={{ background: 'linear-gradient(135deg, #ea580c, #c2410c)' }}>
+                  <span className="text-white font-bold text-lg z-10 relative" style={{ fontFamily: 'Space Grotesk' }}>S</span>
+                  <div className="absolute inset-0 animate-pulse-glow opacity-0 group-hover:opacity-100 transition-opacity" />
+                </div>
+                <div className="hidden sm:block">
+                  <div className="text-white font-semibold text-sm leading-tight" style={{ fontFamily: 'Space Grotesk' }}>Sanjeev Bhandari</div>
+                  <div className="text-xs leading-tight" style={{ color: 'rgba(255,255,255,0.35)' }}>ML Engineer</div>
+                </div>
               </a>
             </Magnetic>
-          </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden relative w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 hover:bg-gray-200 transition-colors"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            <div className="w-5 h-4 flex flex-col justify-between">
-              <span className={`w-full h-0.5 bg-gray-700 rounded-full transition-all duration-300 ${isMenuOpen ? 'rotate-45 translate-y-1.5' : ''}`}></span>
-              <span className={`w-full h-0.5 bg-gray-700 rounded-full transition-all duration-300 ${isMenuOpen ? 'opacity-0' : ''}`}></span>
-              <span className={`w-full h-0.5 bg-gray-700 rounded-full transition-all duration-300 ${isMenuOpen ? '-rotate-45 -translate-y-1.5' : ''}`}></span>
+            {/* Desktop nav */}
+            <div className="hidden md:flex items-center gap-1">
+              {navItems.map(item => {
+                const isActive = activeSection === item.href.slice(1);
+                return (
+                  <Magnetic key={item.name} amount={0.15}>
+                    <a
+                      href={item.href}
+                      className="relative px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200"
+                      style={{ color: isActive ? '#fb923c' : 'rgba(255,255,255,0.55)' }}
+                    >
+                      <span className="relative z-10 hover:text-white transition-colors">{item.name}</span>
+                      {isActive && (
+                        <motion.span
+                          layoutId="navActive"
+                          className="absolute inset-0 rounded-lg"
+                          style={{ background: 'rgba(251,146,60,0.07)' }}
+                          transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                        />
+                      )}
+                    </a>
+                  </Magnetic>
+                );
+              })}
             </div>
-          </button>
-        </div>
 
-        {/* Mobile Menu */}
-        <div 
-          className={`md:hidden overflow-hidden transition-all duration-500 ease-out ${
-            isMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-          }`}
-        >
-          <div className="py-4 space-y-1 border-t border-gray-200/50">
-            {navItems.map((item, index) => (
-              <a
-                key={item.name}
-                href={item.href}
-                className="block px-4 py-3 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-xl transition-all duration-200 font-medium"
-                onClick={() => setIsMenuOpen(false)}
-                style={{ animationDelay: `${index * 50}ms` }}
+            {/* CTA + mobile menu */}
+            <div className="flex items-center gap-3">
+              <div className="hidden md:block">
+                <Magnetic amount={0.2}>
+                  <a href="#contact" className="btn-glow text-sm">
+                    Let's Talk
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </a>
+                </Magnetic>
+              </div>
+
+              {/* Hamburger */}
+              <button
+                className="md:hidden relative w-9 h-9 flex flex-col items-center justify-center gap-1.5"
+                onClick={() => setMenuOpen(!menuOpen)}
+                aria-label="Menu"
               >
-                {item.name}
-              </a>
-            ))}
-            <div className="pt-4 px-4">
-              <a
+                <span className={`w-5 h-px transition-all duration-300 ${menuOpen ? 'rotate-45 translate-y-[5px] bg-white' : 'bg-white/60'}`} />
+                <span className={`w-5 h-px transition-all duration-300 ${menuOpen ? 'opacity-0' : 'bg-white/60'}`} />
+                <span className={`w-5 h-px transition-all duration-300 ${menuOpen ? '-rotate-45 -translate-y-[5px] bg-white' : 'bg-white/60'}`} />
+              </button>
+            </div>
+          </div>
+        </div>
+      </motion.nav>
+
+      {/* Full-screen mobile menu */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-40 md:hidden flex flex-col items-center justify-center"
+            style={{ background: 'rgba(12, 11, 9, 0.97)', backdropFilter: 'blur(20px)' }}
+          >
+            <div className="flex flex-col items-center gap-6">
+              {navItems.map((item, i) => (
+                <motion.a
+                  key={item.name}
+                  href={item.href}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.07 }}
+                  className="text-3xl font-bold transition-colors"
+                  style={{
+                    color: activeSection === item.href.slice(1) ? '#fb923c' : 'rgba(255,255,255,0.6)',
+                    fontFamily: 'Space Grotesk',
+                  }}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  {item.name}
+                </motion.a>
+              ))}
+              <motion.a
                 href="#contact"
-                className="flex items-center justify-center gap-2 w-full px-5 py-3 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-xl transition-colors"
-                onClick={() => setIsMenuOpen(false)}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: navItems.length * 0.07 }}
+                className="btn-glow mt-6"
+                onClick={() => setMenuOpen(false)}
               >
                 Let's Talk
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </a>
+              </motion.a>
             </div>
-          </div>
-        </div>
-      </div>
-    </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 };
 
