@@ -26,8 +26,8 @@ const BackToTop = ({ visible }: { visible: boolean }) => (
         aria-label="Back to top"
         className="fixed bottom-6 right-6 z-50 w-11 h-11 rounded-full flex items-center justify-center group"
         style={{
-          background: 'rgba(124,58,237,0.15)',
-          border: '1px solid rgba(167,139,250,0.25)',
+          background: 'rgba(234,88,12,0.15)',
+          border: '1px solid rgba(251,146,60,0.25)',
           backdropFilter: 'blur(12px)',
           boxShadow: '0 4px 24px rgba(0,0,0,0.3)',
         }}
@@ -36,7 +36,7 @@ const BackToTop = ({ visible }: { visible: boolean }) => (
       >
         <svg
           className="w-4 h-4 transition-transform group-hover:-translate-y-0.5"
-          style={{ color: '#a78bfa' }}
+          style={{ color: '#fb923c' }}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -81,8 +81,8 @@ const Index = () => {
             className="fixed top-0 left-0 h-[2px] z-[100]"
             style={{
               width: `${scrollPct}%`,
-              background: 'linear-gradient(90deg, #7c3aed, #a78bfa, #67e8f9)',
-              boxShadow: '0 0 8px rgba(167,139,250,0.8)',
+              background: 'linear-gradient(90deg, #ea580c, #fb923c, #fbbf24)',
+              boxShadow: '0 0 8px rgba(251,146,60,0.8)',
               transition: 'width 0.1s linear',
             }}
           />

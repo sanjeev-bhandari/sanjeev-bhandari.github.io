@@ -19,7 +19,7 @@ const Blog = () => {
 
   return (
     <section id="blog" className="section-py relative" ref={ref}>
-      <div className="absolute inset-x-0 top-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(167,139,250,0.2), transparent)' }} />
+      <div className="absolute inset-x-0 top-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(251,146,60,0.2), transparent)' }} />
 
       <div className="container-xl">
         <div className="mb-16">
@@ -30,7 +30,7 @@ const Blog = () => {
             className="flex items-center gap-4 mb-4"
           >
             <span className="label-pill">Writing</span>
-            <div className="flex-1 h-px" style={{ background: 'rgba(167,139,250,0.12)' }} />
+            <div className="flex-1 h-px" style={{ background: 'rgba(251,146,60,0.12)' }} />
           </motion.div>
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
             <h2
@@ -89,7 +89,7 @@ const Blog = () => {
               <div
                 className="h-32 relative overflow-hidden shrink-0"
                 style={{
-                  background: `linear-gradient(135deg, ${i % 3 === 0 ? 'rgba(124,58,237,0.3), rgba(6,182,212,0.1)' : i % 3 === 1 ? 'rgba(6,182,212,0.3), rgba(236,72,153,0.1)' : 'rgba(236,72,153,0.3), rgba(124,58,237,0.1)'})`,
+                  background: `linear-gradient(135deg, ${i % 3 === 0 ? 'rgba(234,88,12,0.3), rgba(6,182,212,0.1)' : i % 3 === 1 ? 'rgba(6,182,212,0.3), rgba(236,72,153,0.1)' : 'rgba(236,72,153,0.3), rgba(234,88,12,0.1)'})`,
                 }}
               >
                 <div className="absolute inset-0 flex items-center justify-center">
@@ -138,7 +138,7 @@ const Blog = () => {
                   )}
                   <span
                     className="flex items-center gap-1 text-xs font-semibold ml-auto"
-                    style={{ color: '#a78bfa' }}
+                    style={{ color: '#fb923c' }}
                   >
                     Read
                     <FiExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />

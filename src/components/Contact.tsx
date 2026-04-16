@@ -51,10 +51,10 @@ const Contact = () => {
 
   return (
     <section id="contact" className="section-py relative" ref={ref}>
-      <div className="absolute inset-x-0 top-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(167,139,250,0.2), transparent)' }} />
+      <div className="absolute inset-x-0 top-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(251,146,60,0.2), transparent)' }} />
 
       {/* Background glow for this section */}
-      <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 60% 50% at 50% 100%, rgba(124,58,237,0.08) 0%, transparent 70%)' }} />
+      <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 60% 50% at 50% 100%, rgba(234,88,12,0.08) 0%, transparent 70%)' }} />
 
       <div className="container-xl relative">
         {/* Header - centered big CTA style */}
@@ -118,7 +118,7 @@ const Contact = () => {
             >
               <div
                 className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-                style={{ background: 'linear-gradient(135deg, #7c3aed, #5b21b6)' }}
+                style={{ background: 'linear-gradient(135deg, #ea580c, #5b21b6)' }}
               >
                 <FiMail className="w-5 h-5 text-white" />
               </div>
@@ -210,7 +210,7 @@ const Contact = () => {
                         required
                         placeholder="Your name"
                         style={inputStyle}
-                        onFocus={e => { e.target.style.borderColor = 'rgba(167,139,250,0.4)'; e.target.style.boxShadow = '0 0 0 3px rgba(167,139,250,0.08)'; }}
+                        onFocus={e => { e.target.style.borderColor = 'rgba(251,146,60,0.4)'; e.target.style.boxShadow = '0 0 0 3px rgba(251,146,60,0.08)'; }}
                         onBlur={e => { e.target.style.borderColor = 'rgba(255,255,255,0.08)'; e.target.style.boxShadow = 'none'; }}
                       />
                     </div>
@@ -224,7 +224,7 @@ const Contact = () => {
                         required
                         placeholder="your@email.com"
                         style={inputStyle}
-                        onFocus={e => { e.target.style.borderColor = 'rgba(167,139,250,0.4)'; e.target.style.boxShadow = '0 0 0 3px rgba(167,139,250,0.08)'; }}
+                        onFocus={e => { e.target.style.borderColor = 'rgba(251,146,60,0.4)'; e.target.style.boxShadow = '0 0 0 3px rgba(251,146,60,0.08)'; }}
                         onBlur={e => { e.target.style.borderColor = 'rgba(255,255,255,0.08)'; e.target.style.boxShadow = 'none'; }}
                       />
                     </div>
@@ -239,7 +239,7 @@ const Contact = () => {
                       rows={5}
                       placeholder="Tell me about your project or idea..."
                       style={{ ...inputStyle, resize: 'none' }}
-                      onFocus={e => { e.target.style.borderColor = 'rgba(167,139,250,0.4)'; e.target.style.boxShadow = '0 0 0 3px rgba(167,139,250,0.08)'; }}
+                      onFocus={e => { e.target.style.borderColor = 'rgba(251,146,60,0.4)'; e.target.style.boxShadow = '0 0 0 3px rgba(251,146,60,0.08)'; }}
                       onBlur={e => { e.target.style.borderColor = 'rgba(255,255,255,0.08)'; e.target.style.boxShadow = 'none'; }}
                     />
                   </div>

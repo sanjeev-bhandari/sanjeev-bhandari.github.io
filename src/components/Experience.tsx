@@ -9,7 +9,7 @@ const Experience = () => {
 
   return (
     <section id="experience" className="section-py relative" ref={ref}>
-      <div className="absolute inset-x-0 top-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(167,139,250,0.2), transparent)' }} />
+      <div className="absolute inset-x-0 top-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(251,146,60,0.2), transparent)' }} />
 
       <div className="container-xl">
         <div className="mb-20">
@@ -20,7 +20,7 @@ const Experience = () => {
             className="flex items-center gap-4 mb-4"
           >
             <span className="label-pill">Journey</span>
-            <div className="flex-1 h-px" style={{ background: 'rgba(167,139,250,0.12)' }} />
+            <div className="flex-1 h-px" style={{ background: 'rgba(251,146,60,0.12)' }} />
           </motion.div>
           <h2
             className="text-4xl md:text-6xl lg:text-7xl font-black text-white tracking-tight leading-[0.95]"
@@ -52,7 +52,7 @@ const Experience = () => {
           <div
             className="absolute left-[18px] md:left-1/2 top-0 bottom-0 w-px"
             style={{
-              background: 'linear-gradient(180deg, rgba(167,139,250,0.5) 0%, rgba(167,139,250,0.15) 70%, transparent 100%)',
+              background: 'linear-gradient(180deg, rgba(251,146,60,0.5) 0%, rgba(251,146,60,0.15) 70%, transparent 100%)',
               transform: 'translateX(-50%)',
             }}
           />
@@ -75,11 +75,11 @@ const Experience = () => {
                     <div className="relative">
                       <div
                         className="w-3.5 h-3.5 rounded-full"
-                        style={{ background: 'linear-gradient(135deg, #a78bfa, #7c3aed)', boxShadow: '0 0 12px rgba(167,139,250,0.7)' }}
+                        style={{ background: 'linear-gradient(135deg, #fb923c, #ea580c)', boxShadow: '0 0 12px rgba(251,146,60,0.7)' }}
                       />
                       <div
                         className="absolute inset-0 rounded-full animate-ping opacity-40"
-                        style={{ background: 'rgba(167,139,250,0.5)' }}
+                        style={{ background: 'rgba(251,146,60,0.5)' }}
                       />
                     </div>
                   </div>
@@ -90,9 +90,9 @@ const Experience = () => {
                       <span
                         className="text-xs font-bold px-3 py-1.5 rounded-full font-mono"
                         style={{
-                          background: 'rgba(167,139,250,0.08)',
-                          border: '1px solid rgba(167,139,250,0.2)',
-                          color: 'rgba(167,139,250,0.9)',
+                          background: 'rgba(251,146,60,0.08)',
+                          border: '1px solid rgba(251,146,60,0.2)',
+                          color: 'rgba(251,146,60,0.9)',
                         }}
                       >
                         {exp.period}
@@ -111,7 +111,7 @@ const Experience = () => {
                         >
                           {exp.type}
                         </span>
-                        <span className="font-semibold text-sm" style={{ color: '#a78bfa' }}>{exp.company}</span>
+                        <span className="font-semibold text-sm" style={{ color: '#fb923c' }}>{exp.company}</span>
                       </div>
 
                       <h3

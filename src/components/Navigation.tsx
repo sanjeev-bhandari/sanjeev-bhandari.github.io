@@ -39,7 +39,7 @@ const Navigation = () => {
         className="fixed top-0 w-full z-50 transition-all duration-500"
         style={{
           background: scrolled
-            ? 'rgba(3, 0, 18, 0.85)'
+            ? 'rgba(12, 11, 9, 0.88)'
             : 'transparent',
           backdropFilter: scrolled ? 'blur(20px)' : 'none',
           borderBottom: scrolled ? '1px solid rgba(255,255,255,0.06)' : 'none',
@@ -51,7 +51,7 @@ const Navigation = () => {
             <Magnetic amount={0.1}>
               <a href="#" className="group flex items-center gap-3">
                 <div className="w-9 h-9 rounded-xl flex items-center justify-center relative overflow-hidden"
-                  style={{ background: 'linear-gradient(135deg, #7c3aed, #5b21b6)' }}>
+                  style={{ background: 'linear-gradient(135deg, #ea580c, #c2410c)' }}>
                   <span className="text-white font-bold text-lg z-10 relative" style={{ fontFamily: 'Space Grotesk' }}>S</span>
                   <div className="absolute inset-0 animate-pulse-glow opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
@@ -71,14 +71,14 @@ const Navigation = () => {
                     <a
                       href={item.href}
                       className="relative px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200"
-                      style={{ color: isActive ? '#a78bfa' : 'rgba(255,255,255,0.55)' }}
+                      style={{ color: isActive ? '#fb923c' : 'rgba(255,255,255,0.55)' }}
                     >
                       <span className="relative z-10 hover:text-white transition-colors">{item.name}</span>
                       {isActive && (
                         <motion.span
                           layoutId="navActive"
                           className="absolute inset-0 rounded-lg"
-                          style={{ background: 'rgba(167,139,250,0.08)' }}
+                          style={{ background: 'rgba(251,146,60,0.07)' }}
                           transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                         />
                       )}
@@ -125,7 +125,7 @@ const Navigation = () => {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
             className="fixed inset-0 z-40 md:hidden flex flex-col items-center justify-center"
-            style={{ background: 'rgba(3, 0, 18, 0.97)', backdropFilter: 'blur(20px)' }}
+            style={{ background: 'rgba(12, 11, 9, 0.97)', backdropFilter: 'blur(20px)' }}
           >
             <div className="flex flex-col items-center gap-6">
               {navItems.map((item, i) => (
@@ -137,7 +137,7 @@ const Navigation = () => {
                   transition={{ delay: i * 0.07 }}
                   className="text-3xl font-bold transition-colors"
                   style={{
-                    color: activeSection === item.href.slice(1) ? '#a78bfa' : 'rgba(255,255,255,0.6)',
+                    color: activeSection === item.href.slice(1) ? '#fb923c' : 'rgba(255,255,255,0.6)',
                     fontFamily: 'Space Grotesk',
                   }}
                   onClick={() => setMenuOpen(false)}

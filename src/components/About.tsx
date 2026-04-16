@@ -40,7 +40,7 @@ const About = () => {
   return (
     <section id="about" className="section-py relative" ref={ref}>
       {/* Section glow */}
-      <div className="absolute inset-x-0 top-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(167,139,250,0.3), transparent)' }} />
+      <div className="absolute inset-x-0 top-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(251,146,60,0.3), transparent)' }} />
 
       <div className="container-xl">
         {/* Header */}
@@ -52,7 +52,7 @@ const About = () => {
             className="flex items-center gap-4 mb-4"
           >
             <span className="label-pill">About</span>
-            <div className="flex-1 h-px" style={{ background: 'rgba(167,139,250,0.15)' }} />
+            <div className="flex-1 h-px" style={{ background: 'rgba(251,146,60,0.15)' }} />
           </motion.div>
           <h2
             className="text-4xl md:text-6xl lg:text-7xl font-black text-white tracking-tight leading-[0.95]"
@@ -148,7 +148,7 @@ const About = () => {
               <div className="flex items-center gap-3 mb-5">
                 <div
                   className="w-8 h-8 rounded-lg flex items-center justify-center"
-                  style={{ background: 'linear-gradient(135deg, #7c3aed, #5b21b6)' }}
+                  style={{ background: 'linear-gradient(135deg, #ea580c, #5b21b6)' }}
                 >
                   <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
@@ -195,7 +195,7 @@ const About = () => {
                     style={{
                       background: 'rgba(6,182,212,0.07)',
                       border: '1px solid rgba(6,182,212,0.15)',
-                      color: 'rgba(103,232,249,0.8)',
+                      color: 'rgba(253,186,116,0.8)',
                     }}
                   >
                     {skill}

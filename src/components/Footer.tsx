@@ -25,7 +25,7 @@ const Footer = () => {
     <footer className="relative pt-16 pb-10 overflow-hidden">
       <div
         className="absolute inset-x-0 top-0 h-px"
-        style={{ background: 'linear-gradient(90deg, transparent, rgba(167,139,250,0.3), transparent)' }}
+        style={{ background: 'linear-gradient(90deg, transparent, rgba(251,146,60,0.22), transparent)' }}
       />
 
       {/* Big background text */}
@@ -33,7 +33,7 @@ const Footer = () => {
         className="absolute bottom-0 left-1/2 -translate-x-1/2 text-[12vw] font-black leading-none select-none pointer-events-none whitespace-nowrap"
         style={{
           fontFamily: 'Space Grotesk',
-          color: 'rgba(167,139,250,0.04)',
+          color: 'rgba(251,146,60,0.04)',
           letterSpacing: '-0.03em',
         }}
       >
@@ -52,7 +52,7 @@ const Footer = () => {
             <div className="flex items-center gap-3 mb-3">
               <div
                 className="w-9 h-9 rounded-xl flex items-center justify-center"
-                style={{ background: 'linear-gradient(135deg, #7c3aed, #5b21b6)' }}
+                style={{ background: 'linear-gradient(135deg, #ea580c, #c2410c)' }}
               >
                 <span className="text-white font-bold text-lg" style={{ fontFamily: 'Space Grotesk' }}>S</span>
               </div>
@@ -77,7 +77,7 @@ const Footer = () => {
                 href={l.href}
                 className="text-sm transition-colors"
                 style={{ color: 'rgba(255,255,255,0.35)' }}
-                onMouseEnter={e => (e.currentTarget.style.color = '#a78bfa')}
+                onMouseEnter={e => (e.currentTarget.style.color = '#fb923c')}
                 onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.35)')}
               >
                 {l.name}
@@ -108,9 +108,9 @@ const Footer = () => {
                   }}
                   onMouseEnter={e => {
                     const el = e.currentTarget;
-                    el.style.background = 'rgba(167,139,250,0.1)';
-                    el.style.borderColor = 'rgba(167,139,250,0.25)';
-                    el.style.color = '#a78bfa';
+                    el.style.background = 'rgba(251,146,60,0.1)';
+                    el.style.borderColor = 'rgba(251,146,60,0.25)';
+                    el.style.color = '#fb923c';
                   }}
                   onMouseLeave={e => {
                     const el = e.currentTarget;

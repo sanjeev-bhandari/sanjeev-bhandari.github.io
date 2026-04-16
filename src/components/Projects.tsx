@@ -5,7 +5,7 @@ import { MAJOR_PROJECTS, GITHUB_PROJECTS } from '@/data/portfolio';
 import ScrambleText from '@/components/ui/ScrambleText';
 
 const ACCENT_GRADIENTS = [
-  'linear-gradient(135deg, #7c3aed, #4f46e5)',
+  'linear-gradient(135deg, #ea580c, #4f46e5)',
   'linear-gradient(135deg, #0891b2, #0e7490)',
   'linear-gradient(135deg, #db2777, #9d174d)',
 ];
@@ -17,7 +17,7 @@ const Projects = () => {
 
   return (
     <section id="projects" className="section-py relative" ref={ref}>
-      <div className="absolute inset-x-0 top-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(167,139,250,0.2), transparent)' }} />
+      <div className="absolute inset-x-0 top-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(251,146,60,0.2), transparent)' }} />
 
       <div className="container-xl">
         {/* Header */}
@@ -29,7 +29,7 @@ const Projects = () => {
             className="flex items-center gap-4 mb-4"
           >
             <span className="label-pill">Projects</span>
-            <div className="flex-1 h-px" style={{ background: 'rgba(167,139,250,0.12)' }} />
+            <div className="flex-1 h-px" style={{ background: 'rgba(251,146,60,0.12)' }} />
           </motion.div>
           <h2
             className="text-4xl md:text-6xl lg:text-7xl font-black text-white tracking-tight leading-[0.95] mb-8"
@@ -75,7 +75,7 @@ const Projects = () => {
                   <motion.span
                     layoutId="tabBg"
                     className="absolute inset-0 rounded-lg"
-                    style={{ background: 'linear-gradient(135deg, #7c3aed, #5b21b6)' }}
+                    style={{ background: 'linear-gradient(135deg, #ea580c, #5b21b6)' }}
                     transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                   />
                 )}
@@ -111,7 +111,7 @@ const Projects = () => {
                       <div className="flex items-start gap-5 flex-1">
                         <div
                           className="text-5xl font-black opacity-10 select-none leading-none mt-1 shrink-0"
-                          style={{ fontFamily: 'Space Grotesk', color: '#a78bfa' }}
+                          style={{ fontFamily: 'Space Grotesk', color: '#fb923c' }}
                         >
                           {String(i + 1).padStart(2, '0')}
                         </div>
@@ -155,8 +155,8 @@ const Projects = () => {
                               color: 'rgba(255,255,255,0.5)',
                             }}
                             onMouseEnter={e => {
-                              e.currentTarget.style.borderColor = 'rgba(167,139,250,0.3)';
-                              e.currentTarget.style.color = '#a78bfa';
+                              e.currentTarget.style.borderColor = 'rgba(251,146,60,0.3)';
+                              e.currentTarget.style.color = '#fb923c';
                             }}
                             onMouseLeave={e => {
                               e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
@@ -174,15 +174,15 @@ const Projects = () => {
                             rel="noopener noreferrer"
                             className="flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-xl transition-all duration-300"
                             style={{
-                              background: 'rgba(167,139,250,0.1)',
-                              border: '1px solid rgba(167,139,250,0.2)',
-                              color: '#a78bfa',
+                              background: 'rgba(251,146,60,0.1)',
+                              border: '1px solid rgba(251,146,60,0.2)',
+                              color: '#fb923c',
                             }}
                             onMouseEnter={e => {
-                              e.currentTarget.style.background = 'rgba(167,139,250,0.2)';
+                              e.currentTarget.style.background = 'rgba(251,146,60,0.2)';
                             }}
                             onMouseLeave={e => {
-                              e.currentTarget.style.background = 'rgba(167,139,250,0.1)';
+                              e.currentTarget.style.background = 'rgba(251,146,60,0.1)';
                             }}
                           >
                             <FiDownload className="w-3.5 h-3.5" />
@@ -219,7 +219,7 @@ const Projects = () => {
                     <FiGithub className="w-5 h-5" style={{ color: 'rgba(255,255,255,0.3)' }} />
                     <FiArrowUpRight
                       className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity"
-                      style={{ color: '#a78bfa' }}
+                      style={{ color: '#fb923c' }}
                     />
                   </div>
                   <h3

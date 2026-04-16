@@ -40,7 +40,7 @@ const Typewriter = () => {
       <span className="gradient-text font-semibold">{ROLES[idx].substring(0, sub)}</span>
       <motion.span
         className="inline-block w-0.5 h-5 md:h-6 align-middle ml-0.5"
-        style={{ background: '#a78bfa', verticalAlign: 'middle' }}
+        style={{ background: '#fb923c', verticalAlign: 'middle' }}
         animate={{ opacity: [1, 0, 1] }}
         transition={{ duration: 0.9, repeat: Infinity }}
       />
@@ -166,13 +166,13 @@ const Hero = () => {
     <section
       ref={heroRef}
       className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
-      style={{ background: 'radial-gradient(ellipse 90% 70% at 50% -10%, rgba(124,58,237,0.2) 0%, transparent 60%)' }}
+      style={{ background: 'radial-gradient(ellipse 90% 70% at 50% -10%, rgba(234,88,12,0.18) 0%, transparent 60%)' }}
     >
       {/* Dot-grid background */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          backgroundImage: 'radial-gradient(rgba(167,139,250,0.12) 1px, transparent 1px)',
+          backgroundImage: 'radial-gradient(rgba(251,146,60,0.1) 1px, transparent 1px)',
           backgroundSize: '36px 36px',
           maskImage: 'radial-gradient(ellipse 70% 60% at 50% 50%, black 30%, transparent 100%)',
         }}
@@ -186,7 +186,7 @@ const Hero = () => {
             className="absolute w-full h-px"
             style={{
               top: `${yp * 100}%`,
-              background: `linear-gradient(90deg, transparent 0%, rgba(167,139,250,${0.08 - i * 0.02}) 30%, rgba(167,139,250,${0.08 - i * 0.02}) 70%, transparent 100%)`,
+              background: `linear-gradient(90deg, transparent 0%, rgba(251,146,60,${0.07 - i * 0.018}) 30%, rgba(251,146,60,${0.07 - i * 0.018}) 70%, transparent 100%)`,
             }}
             initial={{ scaleX: 0, opacity: 0 }}
             animate={{ scaleX: 1, opacity: 1 }}
@@ -226,7 +226,7 @@ const Hero = () => {
             style={{
               fontSize: 'clamp(68px, 12.5vw, 196px)',
               fontFamily: 'Space Grotesk',
-              textShadow: '0 0 120px rgba(167,139,250,0.1)',
+              textShadow: '0 0 120px rgba(251,146,60,0.08)',
             }}
           >
             <LineReveal delay={0.4}>
@@ -309,9 +309,9 @@ const Hero = () => {
                 }}
                 onMouseEnter={e => {
                   const el = e.currentTarget;
-                  el.style.background = 'rgba(167,139,250,0.12)';
-                  el.style.borderColor = 'rgba(167,139,250,0.4)';
-                  el.style.color = '#a78bfa';
+                  el.style.background = 'rgba(251,146,60,0.1)';
+                  el.style.borderColor = 'rgba(251,146,60,0.35)';
+                  el.style.color = '#fb923c';
                   el.style.transform = 'scale(1.1)';
                 }}
                 onMouseLeave={e => {
@@ -375,7 +375,7 @@ const Hero = () => {
         >
           <motion.div
             className="w-1 h-2 rounded-full"
-            style={{ background: '#a78bfa' }}
+            style={{ background: '#fb923c' }}
             animate={{ y: [0, 10, 0], opacity: [0.8, 0.3, 0.8] }}
             transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
           />

@@ -26,17 +26,17 @@ const MatrixRain = () => {
 
     let animId: number;
     const draw = () => {
-      ctx.fillStyle = 'rgba(3,0,18,0.05)';
+      ctx.fillStyle = 'rgba(12,11,9,0.07)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.font = `${fontSize}px monospace`;
 
       for (let i = 0; i < drops.length; i++) {
         const char = CHARS[Math.floor(Math.random() * CHARS.length)];
-        const alpha = Math.random() * 0.15 + 0.04;
-        ctx.fillStyle = `rgba(167,139,250,${alpha})`;
+        const alpha = Math.random() * 0.13 + 0.03;
+        ctx.fillStyle = `rgba(251,146,60,${alpha})`;
         ctx.fillText(char, i * fontSize, drops[i] * fontSize);
         if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
-        drops[i] += 0.4;
+        drops[i] += 0.35;
       }
       animId = requestAnimationFrame(draw);
     };
@@ -44,7 +44,7 @@ const MatrixRain = () => {
     return () => cancelAnimationFrame(animId);
   }, []);
 
-  return <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none" style={{ opacity: 0.6 }} />;
+  return <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none" style={{ opacity: 0.55 }} />;
 };
 
 const LoadingScreen = ({ onComplete }: LoadingScreenProps) => {
@@ -67,7 +67,6 @@ const LoadingScreen = ({ onComplete }: LoadingScreenProps) => {
 
       if (frame <= SCRAMBLE_FRAMES) {
         setPhase('scramble');
-        // Full random scramble
         setDisplayName(NAME.split('').map(c => c === ' ' ? ' ' : CHARS[Math.floor(Math.random() * CHARS.length)]).join(''));
       } else {
         setPhase('settle');
@@ -105,7 +104,7 @@ const LoadingScreen = ({ onComplete }: LoadingScreenProps) => {
           exit={{ opacity: 0, scale: 1.03 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           className="fixed inset-0 z-[9999] flex flex-col items-center justify-center"
-          style={{ background: '#030012' }}
+          style={{ background: '#0c0b09' }}
         >
           <MatrixRain />
 
@@ -120,8 +119,8 @@ const LoadingScreen = ({ onComplete }: LoadingScreenProps) => {
               <div
                 className="w-16 h-16 rounded-2xl flex items-center justify-center"
                 style={{
-                  background: 'linear-gradient(135deg, #7c3aed, #5b21b6)',
-                  boxShadow: '0 0 40px rgba(124,58,237,0.5), 0 0 80px rgba(124,58,237,0.15)',
+                  background: 'linear-gradient(135deg, #ea580c, #c2410c)',
+                  boxShadow: '0 0 40px rgba(234,88,12,0.5), 0 0 80px rgba(234,88,12,0.15)',
                 }}
               >
                 <span className="text-white font-black text-3xl" style={{ fontFamily: 'Space Grotesk' }}>S</span>
@@ -132,10 +131,10 @@ const LoadingScreen = ({ onComplete }: LoadingScreenProps) => {
             <div
               className="text-xl md:text-2xl font-black tracking-[0.15em] mb-2 font-mono"
               style={{
-                color: phase === 'done' ? '#ffffff' : 'rgba(167,139,250,0.85)',
+                color: phase === 'done' ? '#ffffff' : 'rgba(251,146,60,0.82)',
                 fontFamily: 'Space Grotesk',
                 transition: phase === 'done' ? 'color 0.4s ease' : 'none',
-                textShadow: phase === 'done' ? '0 0 20px rgba(167,139,250,0.4)' : 'none',
+                textShadow: phase === 'done' ? '0 0 20px rgba(251,146,60,0.4)' : 'none',
                 letterSpacing: '0.18em',
               }}
             >
@@ -144,7 +143,7 @@ const LoadingScreen = ({ onComplete }: LoadingScreenProps) => {
 
             <div
               className="text-xs tracking-[0.3em] uppercase mb-14"
-              style={{ color: 'rgba(167,139,250,0.4)', letterSpacing: '0.25em' }}
+              style={{ color: 'rgba(251,146,60,0.38)', letterSpacing: '0.25em' }}
             >
               ML Engineer
             </div>
@@ -153,13 +152,13 @@ const LoadingScreen = ({ onComplete }: LoadingScreenProps) => {
             <div className="w-56 mb-3 relative">
               <div
                 className="w-full h-px rounded-full overflow-hidden"
-                style={{ background: 'rgba(255,255,255,0.06)' }}
+                style={{ background: 'rgba(255,255,255,0.05)' }}
               >
                 <motion.div
                   className="h-full rounded-full"
                   style={{
-                    background: 'linear-gradient(90deg, #7c3aed, #a78bfa, #67e8f9)',
-                    boxShadow: '0 0 10px rgba(167,139,250,0.8)',
+                    background: 'linear-gradient(90deg, #c2410c, #f97316, #fbbf24)',
+                    boxShadow: '0 0 10px rgba(251,146,60,0.8)',
                     width: `${progress}%`,
                     transition: 'width 0.03s linear',
                   }}
@@ -167,8 +166,8 @@ const LoadingScreen = ({ onComplete }: LoadingScreenProps) => {
               </div>
             </div>
 
-            {/* Progress label */}
-            <div className="text-xs font-mono" style={{ color: 'rgba(167,139,250,0.3)', letterSpacing: '0.1em' }}>
+            {/* Counter */}
+            <div className="text-xs font-mono" style={{ color: 'rgba(251,146,60,0.3)', letterSpacing: '0.1em' }}>
               {Math.round(progress).toString().padStart(3, '0')} / 100
             </div>
           </div>
