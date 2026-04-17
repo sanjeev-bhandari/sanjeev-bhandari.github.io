@@ -8,7 +8,7 @@ const socials = [
   { href: 'https://github.com/realsanjeev', icon: <FaGithub className="w-4 h-4" />, label: 'GitHub' },
   { href: 'https://linkedin.com/in/realsanjeev', icon: <FaLinkedinIn className="w-4 h-4" />, label: 'LinkedIn' },
   { href: 'https://medium.com/@realsanjeev', icon: <SiMedium className="w-4 h-4" />, label: 'Medium' },
-  { href: 'https://huggingface.co/realsanjeev', icon: <SiHuggingface className="w-4 h-4" />, label: 'HuggingFace' },
+  { href: 'https://huggingface.co/sanjeev-bhandari01', icon: <SiHuggingface className="w-4 h-4" />, label: 'HuggingFace' },
   { href: 'mailto:075bei033.sanjeev@pcampus.edu.np', icon: <FiMail className="w-4 h-4" />, label: 'Email' },
 ];
 

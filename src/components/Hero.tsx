@@ -16,41 +16,39 @@ const GLITCH_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%';
 
 // ─── Typewriter ───────────────────────────────────────────────────────────────
 const Typewriter = () => {
-  const [state, setState] = useState({ idx: 0, sub: 0, del: false });
-  const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  const stateRef = useRef({ idx: 0, sub: 0, del: false });
+  const [, forceUpdate] = useState(0);
 
   useEffect(() => {
     const tick = () => {
-      const { idx, sub, del } = state;
+      const { idx, sub, del } = stateRef.current;
       const str = ROLES[idx];
 
       if (!del && sub === str.length) {
-        timeoutRef.current = setTimeout(() => setState(s => ({ ...s, del: true })), 2400);
+        stateRef.current.del = true;
+        setTimeout(tick, 2400);
         return;
       }
 
       if (del && sub === 0) {
-        timeoutRef.current = setTimeout(() => setState(s => ({
-          idx: (s.idx + 1) % ROLES.length,
-          sub: 0,
-          del: false,
-        })), 100);
+        stateRef.current.idx = (idx + 1) % ROLES.length;
+        stateRef.current.sub = 0;
+        stateRef.current.del = false;
+        setTimeout(tick, 100);
         return;
       }
 
-      timeoutRef.current = setTimeout(() => setState(s => ({
-        ...s,
-        sub: s.sub + (s.del ? -1 : 1),
-      })), del ? 32 : 72);
+      stateRef.current.sub = sub + (del ? -1 : 1);
+      forceUpdate(n => n + 1);
+      setTimeout(tick, del ? 10 : 25);
     };
 
-    timeoutRef.current = setTimeout(tick, 1000);
-    return () => clearTimeout(timeoutRef.current);
+    setTimeout(tick, 500);
   }, []);
 
   return (
     <span>
-      <span className="gradient-text font-semibold">{ROLES[state.idx].substring(0, state.sub)}</span>
+      <span className="gradient-text font-semibold">{ROLES[stateRef.current.idx].substring(0, stateRef.current.sub)}</span>
       <motion.span
         className="inline-block w-0.5 h-5 md:h-6 align-middle ml-0.5"
         style={{ background: '#fb923c', verticalAlign: 'middle' }}
@@ -65,8 +63,8 @@ const Typewriter = () => {
 const GlitchName = ({ text }: { text: string }) => {
   const [glitching, setGlitching] = useState(false);
   const [glitchChars, setGlitchChars] = useState(text);
-  const intervalRef = useRef<ReturnType<typeof setInterval>>();
-  const glitchRef = useRef<ReturnType<typeof setTimeout>>();
+  const intervalRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
+  const glitchRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const startGlitch = useCallback(() => {
     setGlitching(true);
