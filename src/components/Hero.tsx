@@ -16,28 +16,41 @@ const GLITCH_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%';
 
 // ─── Typewriter ───────────────────────────────────────────────────────────────
 const Typewriter = () => {
-  const [idx, setIdx] = useState(0);
-  const [sub, setSub] = useState(0);
-  const [del, setDel] = useState(false);
+  const [state, setState] = useState({ idx: 0, sub: 0, del: false });
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
 
   useEffect(() => {
-    const str = ROLES[idx];
-    if (!del && sub === str.length) {
-      const t = setTimeout(() => setDel(true), 2400);
-      return () => clearTimeout(t);
-    }
-    if (del && sub === 0) {
-      setDel(false);
-      setIdx(i => (i + 1) % ROLES.length);
-      return;
-    }
-    const t = setTimeout(() => setSub(s => s + (del ? -1 : 1)), del ? 32 : 72);
-    return () => clearTimeout(t);
-  }, [sub, idx, del]);
+    const tick = () => {
+      const { idx, sub, del } = state;
+      const str = ROLES[idx];
+
+      if (!del && sub === str.length) {
+        timeoutRef.current = setTimeout(() => setState(s => ({ ...s, del: true })), 2400);
+        return;
+      }
+
+      if (del && sub === 0) {
+        timeoutRef.current = setTimeout(() => setState(s => ({
+          idx: (s.idx + 1) % ROLES.length,
+          sub: 0,
+          del: false,
+        })), 100);
+        return;
+      }
+
+      timeoutRef.current = setTimeout(() => setState(s => ({
+        ...s,
+        sub: s.sub + (s.del ? -1 : 1),
+      })), del ? 32 : 72);
+    };
+
+    timeoutRef.current = setTimeout(tick, 1000);
+    return () => clearTimeout(timeoutRef.current);
+  }, []);
 
   return (
     <span>
-      <span className="gradient-text font-semibold">{ROLES[idx].substring(0, sub)}</span>
+      <span className="gradient-text font-semibold">{ROLES[state.idx].substring(0, state.sub)}</span>
       <motion.span
         className="inline-block w-0.5 h-5 md:h-6 align-middle ml-0.5"
         style={{ background: '#fb923c', verticalAlign: 'middle' }}
@@ -60,7 +73,7 @@ const GlitchName = ({ text }: { text: string }) => {
     let count = 0;
 
     intervalRef.current = setInterval(() => {
-      const result = text.split('').map((c, i) => {
+      const result = text.split('').map((c) => {
         if (Math.random() < 0.35) return GLITCH_CHARS[Math.floor(Math.random() * GLITCH_CHARS.length)];
         return c;
       }).join('');

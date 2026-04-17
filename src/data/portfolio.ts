@@ -5,6 +5,9 @@ export interface Experience {
     period: string;
     description: string;
     achievements: string[];
+    type?: string;
+    location?: string;
+    technologies?: string[];
 }
 
 export interface Project {
@@ -46,36 +49,45 @@ export const EXPERIENCES: Experience[] = [
         title: "Machine Learning Engineer",
         company: "TAI Inc.",
         period: "May 2024 – Present",
+        type: "Full-time",
+        location: "Shantinagar, Kathmandu",
         description: "Responsible for the development and deployment of machine learning models, with a focus on computer vision and large language model (LLM)-based systems. Collaborate with international teams to deliver scalable and efficient AI-driven solutions.",
         achievements: [
             "Designed and integrated computer vision models for a Document Verification System utilized in visa processing workflows",
             "Contributed to the development of a Retrieval-Augmented Generation (RAG) application, Sensei GPT, for educational content generation using LLMs",
             "Developed a FastAPI-based service for deploying a facial recognition system",
             "Worked closely with global stakeholders and senior engineers to engineer production-ready ML solutions"
-        ]
+        ],
+        technologies: ["PyTorch", "OpenCV", "FastAPI", "LLMs", "RAG", "Docker"]
     },
     {
         title: "Machine Learning Trainee – R&D Focus",
         company: "TAI Inc.",
         period: "Feb 2024 – May 2024",
+        type: "Trainee",
+        location: "Shantinagar, Kathmandu",
         description: "Engaged in applied research in the domains of LLM fine-tuning and retrieval-augmented generation. Investigated and implemented advanced techniques to enhance model efficiency and adaptability.",
         achievements: [
             "Implemented cutting-edge RAG techniques, including Graph RAG architectures",
             "Explored and applied parameter-efficient fine-tuning methods such as LoRA and QLoRA",
             "Researched and tested model merging methodologies for optimized performance",
             "Investigated methods for extending context length in pre-trained language models"
-        ]
+        ],
+        technologies: ["PyTorch", "HuggingFace", "LangChain", "LoRA", "QLoRA"]
     },
     {
         title: "Python Intern",
         company: "TAI Inc.",
         period: "Nov 2023 – Feb 2024",
+        type: "Internship",
+        location: "Shantinagar, Kathmandu",
         description: "Supported natural language processing model development while gaining hands-on experience with modern ML tools in a production-oriented environment.",
         achievements: [
             "Initiated development of a Nepali text summarization model using BART, including dataset curation and training",
             "Applied LoRA for fine-tuning, acquiring practical understanding of parameter-efficient fine-tuning techniques",
             "Gained experience with tools such as Docker, Jenkins, and the Neo4j graph database"
-        ]
+        ],
+        technologies: ["Python", "BART", "LoRA", "Docker", "Jenkins", "Neo4j"]
     }
 ];
 

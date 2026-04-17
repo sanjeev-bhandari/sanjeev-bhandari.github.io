@@ -4,15 +4,6 @@ import { FiExternalLink, FiClock } from 'react-icons/fi';
 import { BLOG_POSTS } from '@/data/portfolio';
 import ScrambleText from '@/components/ui/ScrambleText';
 
-const CARD_GRADIENTS = [
-  'from-violet-500/10 to-purple-500/5',
-  'from-cyan-500/10 to-blue-500/5',
-  'from-pink-500/10 to-rose-500/5',
-  'from-amber-500/10 to-orange-500/5',
-  'from-emerald-500/10 to-teal-500/5',
-  'from-indigo-500/10 to-blue-500/5',
-];
-
 const Blog = () => {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, amount: 0.05 });
