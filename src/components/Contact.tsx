@@ -201,27 +201,31 @@ const Contact = () => {
                 <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-semibold mb-2" style={{ color: 'rgba(255,255,255,0.4)' }}>Name</label>
+                      <label htmlFor="contact-name" className="block text-xs font-semibold mb-2" style={{ color: 'rgba(255,255,255,0.4)' }}>Name</label>
                       <input
+                        id="contact-name"
                         name="name"
                         value={form.name}
                         onChange={handleChange}
                         required
                         placeholder="Your name"
+                        autoComplete="name"
                         style={inputStyle}
                         onFocus={e => { e.target.style.borderColor = 'rgba(251,146,60,0.4)'; e.target.style.boxShadow = '0 0 0 3px rgba(251,146,60,0.08)'; }}
                         onBlur={e => { e.target.style.borderColor = 'rgba(255,255,255,0.08)'; e.target.style.boxShadow = 'none'; }}
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold mb-2" style={{ color: 'rgba(255,255,255,0.4)' }}>Email</label>
+                      <label htmlFor="contact-email" className="block text-xs font-semibold mb-2" style={{ color: 'rgba(255,255,255,0.4)' }}>Email</label>
                       <input
+                        id="contact-email"
                         name="email"
                         type="email"
                         value={form.email}
                         onChange={handleChange}
                         required
                         placeholder="your@email.com"
+                        autoComplete="email"
                         style={inputStyle}
                         onFocus={e => { e.target.style.borderColor = 'rgba(251,146,60,0.4)'; e.target.style.boxShadow = '0 0 0 3px rgba(251,146,60,0.08)'; }}
                         onBlur={e => { e.target.style.borderColor = 'rgba(255,255,255,0.08)'; e.target.style.boxShadow = 'none'; }}
@@ -229,8 +233,9 @@ const Contact = () => {
                     </div>
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold mb-2" style={{ color: 'rgba(255,255,255,0.4)' }}>Message</label>
+                    <label htmlFor="contact-message" className="block text-xs font-semibold mb-2" style={{ color: 'rgba(255,255,255,0.4)' }}>Message</label>
                     <textarea
+                      id="contact-message"
                       name="message"
                       value={form.message}
                       onChange={handleChange}
