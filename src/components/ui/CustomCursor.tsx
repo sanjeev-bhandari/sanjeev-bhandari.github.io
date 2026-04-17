@@ -11,10 +11,15 @@ const CustomCursor = () => {
   const currentRef = useRef({ x: -200, y: -200 });
 
   useEffect(() => {
-    if (window.matchMedia('(pointer: coarse)').matches) {
-      setIsMobile(true);
-      return;
-    }
+    const checkMobile = () => {
+      if (window.matchMedia('(pointer: coarse)').matches) {
+        setIsMobile(true);
+        return true;
+      }
+      return false;
+    };
+
+    if (checkMobile()) return;
 
     const move = (e: MouseEvent) => {
       targetRef.current = { x: e.clientX, y: e.clientY };
@@ -62,7 +67,7 @@ const CustomCursor = () => {
       {/* Dot cursor - follows exactly */}
       <div
         className="fixed top-0 left-0 pointer-events-none z-[9999] w-1.5 h-1.5 rounded-full bg-white mix-blend-difference"
-        style={{ transform: `translate(${targetRef.current.x - 3}px, ${targetRef.current.y - 3}px)` }}
+        style={{ transform: `translate(${pos.x - 3}px, ${pos.y - 3}px)` }}
       />
 
       {/* Ring cursor - smooth follow */}

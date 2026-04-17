@@ -29,4 +29,5 @@ dist-ssr
 *.sw?
 
 dist
+.playwright-mcp
 bun.lock

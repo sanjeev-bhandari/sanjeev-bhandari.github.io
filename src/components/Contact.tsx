@@ -2,7 +2,6 @@ import { useState, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import emailjs from '@emailjs/browser';
 import ScrambleText from '@/components/ui/ScrambleText';
-import { Input } from '@/components/ui/input';
 import { FiMail, FiSend, FiCheck, FiAlertCircle, FiGithub, FiLinkedin } from 'react-icons/fi';
 import Magnetic from '@/components/ui/Magnetic';
 
