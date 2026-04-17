@@ -66,6 +66,7 @@ const Experience = () => {
                   initial={{ opacity: 0, x: isLeft ? -40 : 40, y: 20 }}
                   animate={inView ? { opacity: 1, x: 0, y: 0 } : {}}
                   transition={{ duration: 0.7, delay: 0.2 + i * 0.12 }}
+                  whileHover={{ scale: 1.01 }}
                   className={`relative flex flex-col md:items-start gap-0 ${
                     isLeft ? 'md:flex-row' : 'md:flex-row-reverse'
                   }`}

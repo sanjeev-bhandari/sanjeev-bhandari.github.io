@@ -16,12 +16,33 @@ const Contact = () => {
 
   const [form, setForm] = useState({ name: '', email: '', message: '' });
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+  const [errors, setErrors] = useState<{ name?: string; email?: string; message?: string }>({});
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-    setForm(f => ({ ...f, [e.target.name]: e.target.value }));
+  const validateForm = () => {
+    const newErrors: typeof errors = {};
+    if (!form.name.trim()) newErrors.name = 'Name is required';
+    if (!form.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+      newErrors.email = 'Invalid email format';
+    }
+    if (!form.message.trim()) newErrors.message = 'Message is required';
+    if (form.message.length < 10) newErrors.message = 'Message must be at least 10 characters';
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setForm(f => ({ ...f, [name]: value }));
+    if (errors[name as keyof typeof errors]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validateForm()) return;
     if (!EMAILJS_SERVICE || !EMAILJS_TEMPLATE || !EMAILJS_KEY) {
       window.location.href = `mailto:075bei033.sanjeev@pcampus.edu.np?subject=Hello from ${form.name}&body=${form.message}`;
       return;
@@ -31,6 +52,7 @@ const Contact = () => {
       await emailjs.sendForm(EMAILJS_SERVICE, EMAILJS_TEMPLATE, formRef.current!, { publicKey: EMAILJS_KEY });
       setStatus('success');
       setForm({ name: '', email: '', message: '' });
+      setErrors({});
     } catch {
       setStatus('error');
     }
@@ -201,7 +223,7 @@ const Contact = () => {
                 <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div>
-                      <label htmlFor="contact-name" className="block text-xs font-semibold mb-2" style={{ color: 'rgba(255,255,255,0.4)' }}>Name</label>
+                      <label htmlFor="contact-name" className="block text-xs font-semibold mb-2" style={{ color: errors.name ? 'rgba(248,113,113,0.9)' : 'rgba(255,255,255,0.4)' }}>Name</label>
                       <input
                         id="contact-name"
                         name="name"
@@ -210,13 +232,18 @@ const Contact = () => {
                         required
                         placeholder="Your name"
                         autoComplete="name"
-                        style={inputStyle}
-                        onFocus={e => { e.target.style.borderColor = 'rgba(251,146,60,0.4)'; e.target.style.boxShadow = '0 0 0 3px rgba(251,146,60,0.08)'; }}
-                        onBlur={e => { e.target.style.borderColor = 'rgba(255,255,255,0.08)'; e.target.style.boxShadow = 'none'; }}
+                        style={{
+                          ...inputStyle,
+                          borderColor: errors.name ? 'rgba(239,68,68,0.4)' : inputStyle.borderColor,
+                          boxShadow: errors.name ? '0 0 0 3px rgba(239,68,68,0.08)' : 'none',
+                        }}
+                        onFocus={e => { e.target.style.borderColor = errors.name ? 'rgba(239,68,68,0.4)' : 'rgba(251,146,60,0.4)'; e.target.style.boxShadow = errors.name ? '0 0 0 3px rgba(239,68,68,0.08)' : '0 0 0 3px rgba(251,146,60,0.08)'; }}
+                        onBlur={e => { e.target.style.borderColor = errors.name ? 'rgba(239,68,68,0.4)' : 'rgba(255,255,255,0.08)'; e.target.style.boxShadow = 'none'; }}
                       />
+                      {errors.name && <p className="text-xs mt-1" style={{ color: 'rgba(248,113,113,0.9)' }}>{errors.name}</p>}
                     </div>
                     <div>
-                      <label htmlFor="contact-email" className="block text-xs font-semibold mb-2" style={{ color: 'rgba(255,255,255,0.4)' }}>Email</label>
+                      <label htmlFor="contact-email" className="block text-xs font-semibold mb-2" style={{ color: errors.email ? 'rgba(248,113,113,0.9)' : 'rgba(255,255,255,0.4)' }}>Email</label>
                       <input
                         id="contact-email"
                         name="email"
@@ -226,14 +253,22 @@ const Contact = () => {
                         required
                         placeholder="your@email.com"
                         autoComplete="email"
-                        style={inputStyle}
-                        onFocus={e => { e.target.style.borderColor = 'rgba(251,146,60,0.4)'; e.target.style.boxShadow = '0 0 0 3px rgba(251,146,60,0.08)'; }}
-                        onBlur={e => { e.target.style.borderColor = 'rgba(255,255,255,0.08)'; e.target.style.boxShadow = 'none'; }}
+                        style={{
+                          ...inputStyle,
+                          borderColor: errors.email ? 'rgba(239,68,68,0.4)' : inputStyle.borderColor,
+                          boxShadow: errors.email ? '0 0 0 3px rgba(239,68,68,0.08)' : 'none',
+                        }}
+                        onFocus={e => { e.target.style.borderColor = errors.email ? 'rgba(239,68,68,0.4)' : 'rgba(251,146,60,0.4)'; e.target.style.boxShadow = errors.email ? '0 0 0 3px rgba(239,68,68,0.08)' : '0 0 0 3px rgba(251,146,60,0.08)'; }}
+                        onBlur={e => { e.target.style.borderColor = errors.email ? 'rgba(239,68,68,0.4)' : 'rgba(255,255,255,0.08)'; e.target.style.boxShadow = 'none'; }}
                       />
+                      {errors.email && <p className="text-xs mt-1" style={{ color: 'rgba(248,113,113,0.9)' }}>{errors.email}</p>}
                     </div>
                   </div>
                   <div>
-                    <label htmlFor="contact-message" className="block text-xs font-semibold mb-2" style={{ color: 'rgba(255,255,255,0.4)' }}>Message</label>
+                    <div className="flex items-center justify-between mb-2">
+                      <label htmlFor="contact-message" className="block text-xs font-semibold" style={{ color: errors.message ? 'rgba(248,113,113,0.9)' : 'rgba(255,255,255,0.4)' }}>Message</label>
+                      <span className="text-xs" style={{ color: form.message.length > 500 ? 'rgba(248,113,113,0.7)' : 'rgba(255,255,255,0.3)' }}>{form.message.length}/500</span>
+                    </div>
                     <textarea
                       id="contact-message"
                       name="message"
@@ -241,11 +276,18 @@ const Contact = () => {
                       onChange={handleChange}
                       required
                       rows={5}
+                      maxLength={500}
                       placeholder="Tell me about your project or idea..."
-                      style={{ ...inputStyle, resize: 'none' }}
-                      onFocus={e => { e.target.style.borderColor = 'rgba(251,146,60,0.4)'; e.target.style.boxShadow = '0 0 0 3px rgba(251,146,60,0.08)'; }}
-                      onBlur={e => { e.target.style.borderColor = 'rgba(255,255,255,0.08)'; e.target.style.boxShadow = 'none'; }}
+                      style={{
+                        ...inputStyle,
+                        resize: 'none',
+                        borderColor: errors.message ? 'rgba(239,68,68,0.4)' : inputStyle.borderColor,
+                        boxShadow: errors.message ? '0 0 0 3px rgba(239,68,68,0.08)' : 'none',
+                      }}
+                      onFocus={e => { e.target.style.borderColor = errors.message ? 'rgba(239,68,68,0.4)' : 'rgba(251,146,60,0.4)'; e.target.style.boxShadow = errors.message ? '0 0 0 3px rgba(239,68,68,0.08)' : '0 0 0 3px rgba(251,146,60,0.08)'; }}
+                      onBlur={e => { e.target.style.borderColor = errors.message ? 'rgba(239,68,68,0.4)' : 'rgba(255,255,255,0.08)'; e.target.style.boxShadow = 'none'; }}
                     />
+                    {errors.message && <p className="text-xs mt-1" style={{ color: 'rgba(248,113,113,0.9)' }}>{errors.message}</p>}
                   </div>
 
                   {status === 'error' && (

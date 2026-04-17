@@ -59,6 +59,15 @@
     background: #0c0b09;
   }
 
+  .light {
+    background: #f8f7f4;
+  }
+
+  .light body {
+    background: #f8f7f4;
+    color: #1a1a1a;
+  }
+
   @media (pointer: coarse) {
     body { cursor: auto; }
   }
@@ -72,9 +81,17 @@
     color: white;
   }
 
+  .light ::selection {
+    background: rgba(249, 115, 22, 0.28);
+    color: #1a1a1a;
+  }
+
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: #0c0b09; }
   ::-webkit-scrollbar-thumb { background: #c2530a; border-radius: 2px; }
+
+  .light ::-webkit-scrollbar-track { background: #f8f7f4; }
+  .light ::-webkit-scrollbar-thumb { background: #e0d9ce; border-radius: 2px; }
 }
 
 @layer components {

@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTheme } from 'next-themes';
+import { FiMoon, FiSun } from 'react-icons/fi';
 import Magnetic from '@/components/ui/Magnetic';
 
 const navItems = [
   { name: 'About', href: '#about' },
   { name: 'Experience', href: '#experience' },
   { name: 'Projects', href: '#projects' },
+  { name: 'Publications', href: '#publications' },
   { name: 'Blog', href: '#blog' },
   { name: 'Contact', href: '#contact' },
 ];
@@ -14,6 +17,12 @@ const Navigation = () => {
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -22,12 +31,19 @@ const Navigation = () => {
   }, []);
 
   useEffect(() => {
+    let debounceTimer: NodeJS.Timeout;
     const ids = navItems.map(n => n.href.slice(1));
     const observer = new IntersectionObserver(entries => {
-      entries.forEach(e => { if (e.isIntersecting) setActiveSection(e.target.id); });
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        entries.forEach(e => { if (e.isIntersecting) setActiveSection(e.target.id); });
+      }, 50);
     }, { threshold: 0.3, rootMargin: '-80px 0px -60% 0px' });
     ids.forEach(id => { const el = document.getElementById(id); if (el) observer.observe(el); });
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      clearTimeout(debounceTimer);
+    };
   }, []);
 
   return (
@@ -90,6 +106,30 @@ const Navigation = () => {
 
             {/* CTA + mobile menu */}
             <div className="flex items-center gap-3">
+              {mounted && (
+                <button
+                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                  className="relative w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-300"
+                  style={{
+                    background: 'rgba(255,255,255,0.04)',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    color: 'rgba(255,255,255,0.6)',
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.background = 'rgba(251,146,60,0.1)';
+                    e.currentTarget.style.borderColor = 'rgba(251,146,60,0.3)';
+                    e.currentTarget.style.color = '#fb923c';
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.04)';
+                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
+                    e.currentTarget.style.color = 'rgba(255,255,255,0.6)';
+                  }}
+                  aria-label="Toggle theme"
+                >
+                  {theme === 'dark' ? <FiSun className="w-4 h-4" /> : <FiMoon className="w-4 h-4" />}
+                </button>
+              )}
               <div className="hidden md:block">
                 <Magnetic amount={0.2}>
                   <a href="#contact" className="btn-glow text-sm">

@@ -103,6 +103,7 @@ const Projects = () => {
                   initial={{ opacity: 0, y: 30 }}
                   animate={inView ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.6, delay: i * 0.1 }}
+                  whileHover={{ y: -6 }}
                   className="card-dark rounded-2xl overflow-hidden group hover:shadow-2xl transition-all duration-500"
                 >
                   <div className="h-[3px] w-full" style={{ background: ACCENT_GRADIENTS[i % ACCENT_GRADIENTS.length] }} />
@@ -213,6 +214,7 @@ const Projects = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={inView ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.5, delay: i * 0.07 }}
+                  whileHover={{ y: -4, scale: 1.02 }}
                   className="card-dark rounded-2xl p-5 group hover:shadow-2xl transition-all duration-500 flex flex-col"
                 >
                   <div className="flex items-start justify-between mb-3">
