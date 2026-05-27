@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useTheme } from 'next-themes';
-import { FiMoon, FiSun } from 'react-icons/fi';
 import Magnetic from '@/components/ui/Magnetic';
 
 const navItems = [
@@ -17,12 +15,7 @@ const Navigation = () => {
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
-  const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const [uptime] = useState(() => `${(99.7 + Math.random() * 0.28).toFixed(1)}%`);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -31,19 +24,16 @@ const Navigation = () => {
   }, []);
 
   useEffect(() => {
-    let debounceTimer: NodeJS.Timeout;
+    let debounce: ReturnType<typeof setTimeout>;
     const ids = navItems.map(n => n.href.slice(1));
     const observer = new IntersectionObserver(entries => {
-      clearTimeout(debounceTimer);
-      debounceTimer = setTimeout(() => {
+      clearTimeout(debounce);
+      debounce = setTimeout(() => {
         entries.forEach(e => { if (e.isIntersecting) setActiveSection(e.target.id); });
       }, 50);
     }, { threshold: 0.3, rootMargin: '-80px 0px -60% 0px' });
     ids.forEach(id => { const el = document.getElementById(id); if (el) observer.observe(el); });
-    return () => {
-      observer.disconnect();
-      clearTimeout(debounceTimer);
-    };
+    return () => { observer.disconnect(); clearTimeout(debounce); };
   }, []);
 
   return (
@@ -54,11 +44,9 @@ const Navigation = () => {
         transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
         className="fixed top-0 w-full z-50 transition-all duration-500"
         style={{
-          background: scrolled
-            ? 'rgba(12, 11, 9, 0.88)'
-            : 'transparent',
+          background: scrolled ? 'rgba(12,11,9,0.88)' : 'transparent',
           backdropFilter: scrolled ? 'blur(20px)' : 'none',
-          borderBottom: scrolled ? '1px solid rgba(255,255,255,0.06)' : 'none',
+          borderBottom: scrolled ? '1px solid rgba(255,255,255,0.05)' : 'none',
         }}
       >
         <div className="container-xl">
@@ -67,13 +55,25 @@ const Navigation = () => {
             <Magnetic amount={0.1}>
               <a href="#" className="group flex items-center gap-3">
                 <div className="w-9 h-9 rounded-xl flex items-center justify-center relative overflow-hidden"
-                  style={{ background: 'linear-gradient(135deg, #ea580c, #c2410c)' }}>
+                  style={{ background: 'linear-gradient(135deg,#ea580c,#c2410c)' }}>
                   <span className="text-white font-bold text-lg z-10 relative" style={{ fontFamily: 'Space Grotesk' }}>S</span>
                   <div className="absolute inset-0 animate-pulse-glow opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
                 <div className="hidden sm:block">
                   <div className="text-white font-semibold text-sm leading-tight" style={{ fontFamily: 'Space Grotesk' }}>Sanjeev Bhandari</div>
-                  <div className="text-xs leading-tight" style={{ color: 'rgba(255,255,255,0.35)' }}>ML Engineer</div>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-xs leading-tight" style={{ color: 'rgba(255,255,255,0.32)' }}>ML Engineer</span>
+                    <span style={{ color: 'rgba(255,255,255,0.12)' }}>·</span>
+                    <span className="font-mono text-[9px] flex items-center gap-1" style={{ color: 'rgba(52,211,153,0.65)' }}>
+                      <motion.span
+                        className="w-1 h-1 rounded-full inline-block"
+                        style={{ background: '#34d399' }}
+                        animate={{ opacity: [1, 0.3, 1] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                      />
+                      v1.0.0 · {uptime}
+                    </span>
+                  </div>
                 </div>
               </a>
             </Magnetic>
@@ -84,19 +84,14 @@ const Navigation = () => {
                 const isActive = activeSection === item.href.slice(1);
                 return (
                   <Magnetic key={item.name} amount={0.15}>
-                    <a
-                      href={item.href}
+                    <a href={item.href}
                       className="relative px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200"
-                      style={{ color: isActive ? '#fb923c' : 'rgba(255,255,255,0.55)' }}
-                    >
+                      style={{ color: isActive ? '#fb923c' : 'rgba(255,255,255,0.52)' }}>
                       <span className="relative z-10 hover:text-white transition-colors">{item.name}</span>
                       {isActive && (
-                        <motion.span
-                          layoutId="navActive"
-                          className="absolute inset-0 rounded-lg"
+                        <motion.span layoutId="navActive" className="absolute inset-0 rounded-lg"
                           style={{ background: 'rgba(251,146,60,0.07)' }}
-                          transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                        />
+                          transition={{ type: 'spring', stiffness: 400, damping: 30 }} />
                       )}
                     </a>
                   </Magnetic>
@@ -104,32 +99,8 @@ const Navigation = () => {
               })}
             </div>
 
-            {/* CTA + mobile menu */}
+            {/* CTA + mobile */}
             <div className="flex items-center gap-3">
-              {mounted && (
-                <button
-                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                  className="relative w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-300"
-                  style={{
-                    background: 'rgba(255,255,255,0.04)',
-                    border: '1px solid rgba(255,255,255,0.1)',
-                    color: 'rgba(255,255,255,0.6)',
-                  }}
-                  onMouseEnter={e => {
-                    e.currentTarget.style.background = 'rgba(251,146,60,0.1)';
-                    e.currentTarget.style.borderColor = 'rgba(251,146,60,0.3)';
-                    e.currentTarget.style.color = '#fb923c';
-                  }}
-                  onMouseLeave={e => {
-                    e.currentTarget.style.background = 'rgba(255,255,255,0.04)';
-                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
-                    e.currentTarget.style.color = 'rgba(255,255,255,0.6)';
-                  }}
-                  aria-label="Toggle theme"
-                >
-                  {theme === 'dark' ? <FiSun className="w-4 h-4" /> : <FiMoon className="w-4 h-4" />}
-                </button>
-              )}
               <div className="hidden md:block">
                 <Magnetic amount={0.2}>
                   <a href="#contact" className="btn-glow text-sm">
@@ -140,13 +111,8 @@ const Navigation = () => {
                   </a>
                 </Magnetic>
               </div>
-
-              {/* Hamburger */}
-              <button
-                className="md:hidden relative w-9 h-9 flex flex-col items-center justify-center gap-1.5"
-                onClick={() => setMenuOpen(!menuOpen)}
-                aria-label="Menu"
-              >
+              <button className="md:hidden relative w-9 h-9 flex flex-col items-center justify-center gap-1.5"
+                onClick={() => setMenuOpen(!menuOpen)} aria-label="Menu">
                 <span className={`w-5 h-px transition-all duration-300 ${menuOpen ? 'rotate-45 translate-y-[5px] bg-white' : 'bg-white/60'}`} />
                 <span className={`w-5 h-px transition-all duration-300 ${menuOpen ? 'opacity-0' : 'bg-white/60'}`} />
                 <span className={`w-5 h-px transition-all duration-300 ${menuOpen ? '-rotate-45 -translate-y-[5px] bg-white' : 'bg-white/60'}`} />
@@ -156,43 +122,28 @@ const Navigation = () => {
         </div>
       </motion.nav>
 
-      {/* Full-screen mobile menu */}
+      {/* Mobile menu */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
             className="fixed inset-0 z-40 md:hidden flex flex-col items-center justify-center"
-            style={{ background: 'rgba(12, 11, 9, 0.97)', backdropFilter: 'blur(20px)' }}
-          >
+            style={{ background: 'rgba(12,11,9,0.97)', backdropFilter: 'blur(20px)' }}>
             <div className="flex flex-col items-center gap-6">
               {navItems.map((item, i) => (
-                <motion.a
-                  key={item.name}
-                  href={item.href}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
+                <motion.a key={item.name} href={item.href}
+                  initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.07 }}
                   className="text-3xl font-bold transition-colors"
-                  style={{
-                    color: activeSection === item.href.slice(1) ? '#fb923c' : 'rgba(255,255,255,0.6)',
-                    fontFamily: 'Space Grotesk',
-                  }}
-                  onClick={() => setMenuOpen(false)}
-                >
+                  style={{ color: activeSection === item.href.slice(1) ? '#fb923c' : 'rgba(255,255,255,0.6)', fontFamily: 'Space Grotesk' }}
+                  onClick={() => setMenuOpen(false)}>
                   {item.name}
                 </motion.a>
               ))}
-              <motion.a
-                href="#contact"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+              <motion.a href="#contact" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: navItems.length * 0.07 }}
-                className="btn-glow mt-6"
-                onClick={() => setMenuOpen(false)}
-              >
+                className="btn-glow mt-6" onClick={() => setMenuOpen(false)}>
                 Let's Talk
               </motion.a>
             </div>

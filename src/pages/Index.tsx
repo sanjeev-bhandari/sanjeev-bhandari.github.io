@@ -14,6 +14,7 @@ import CustomCursor from '@/components/ui/CustomCursor';
 import MouseGlow from '@/components/ui/MouseGlow';
 import LoadingScreen from '@/components/ui/LoadingScreen';
 import SkillsMarquee from '@/components/ui/SkillsMarquee';
+import KonamiTerminal from '@/components/ui/KonamiTerminal';
 
 const BackToTop = ({ visible }: { visible: boolean }) => (
   <AnimatePresence>
@@ -108,6 +109,7 @@ const Index = () => {
           <Footer />
         </>
       )}
+      <KonamiTerminal />
     </div>
   );
 };

@@ -195,6 +195,56 @@ const About = () => {
               </div>
             </div>
 
+            {/* package.json skills block */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.7, delay: 0.85 }}
+              className="rounded-2xl overflow-hidden"
+              style={{ background: 'rgba(12,10,8,0.9)', border: '1px solid rgba(251,146,60,0.1)' }}
+            >
+              <div className="flex items-center gap-2 px-4 py-2.5" style={{ background: 'rgba(255,255,255,0.02)', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+                <div className="flex gap-1.5">
+                  {['#ff5f57','#febc2e','#28c840'].map((c,i) => <div key={i} className="w-2.5 h-2.5 rounded-full" style={{ background: c, opacity: 0.6 }} />)}
+                </div>
+                <span className="text-[10px] font-mono ml-2" style={{ color: 'rgba(255,255,255,0.18)' }}>package.json</span>
+              </div>
+              <div className="p-4 font-mono text-xs leading-6">
+                {[
+                  { indent: 0, text: '{', color: 'rgba(255,255,255,0.3)' },
+                  { indent: 1, text: '"name": "sanjeev-bhandari",', key: '"name"', val: '"sanjeev-bhandari"' },
+                  { indent: 1, text: '"version": "3.0.0",', key: '"version"', val: '"3.0.0"' },
+                  { indent: 1, text: '"dependencies": {', color: 'rgba(255,255,255,0.3)' },
+                  { indent: 2, text: '"pytorch": "^2.1.0",', key: '"pytorch"', val: '"^2.1.0"' },
+                  { indent: 2, text: '"langchain": "^0.1.0",', key: '"langchain"', val: '"^0.1.0"' },
+                  { indent: 2, text: '"huggingface": "^4.35.0",', key: '"huggingface"', val: '"^4.35.0"' },
+                  { indent: 2, text: '"fastapi": "^0.104.0",', key: '"fastapi"', val: '"^0.104.0"' },
+                  { indent: 2, text: '"opencv": "^4.8.0"', key: '"opencv"', val: '"^4.8.0"' },
+                  { indent: 1, text: '},', color: 'rgba(255,255,255,0.3)' },
+                  { indent: 1, text: '"devDependencies": {', color: 'rgba(255,255,255,0.3)' },
+                  { indent: 2, text: '"linux": "^6.5.0",', key: '"linux"', val: '"^6.5.0"' },
+                  { indent: 2, text: '"rust": "^1.73.0"', key: '"rust"', val: '"^1.73.0"' },
+                  { indent: 1, text: '}', color: 'rgba(255,255,255,0.3)' },
+                  { indent: 0, text: '}', color: 'rgba(255,255,255,0.3)' },
+                ].map((line, i) => (
+                  <motion.div key={i} initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
+                    transition={{ delay: 0.95 + i * 0.04 }}
+                    style={{ paddingLeft: `${line.indent * 16}px` }}>
+                    {line.key ? (
+                      <>
+                        <span style={{ color: '#e879f9' }}>{line.key}</span>
+                        <span style={{ color: 'rgba(255,255,255,0.22)' }}>: </span>
+                        <span style={{ color: 'rgba(251,146,60,0.75)' }}>{line.val}</span>
+                        {line.text.endsWith(',') && <span style={{ color: 'rgba(255,255,255,0.2)' }}>,</span>}
+                      </>
+                    ) : (
+                      <span style={{ color: line.color ?? 'rgba(255,255,255,0.28)' }}>{line.text}</span>
+                    )}
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+
             {/* profile.json terminal block */}
             <motion.div
               initial={{ opacity: 0, y: 16 }}
