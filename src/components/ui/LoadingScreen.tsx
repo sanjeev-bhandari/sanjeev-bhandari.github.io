@@ -55,8 +55,8 @@ const LoadingScreen = ({ onComplete }: LoadingScreenProps) => {
 
   useEffect(() => {
     let frame = 0;
-    const SCRAMBLE_FRAMES = 80;
-    const SETTLE_FRAMES = NAME.length * 5;
+    const SCRAMBLE_FRAMES = 40;
+    const SETTLE_FRAMES = NAME.length * 3;
     let animId: number;
 
     const animate = () => {

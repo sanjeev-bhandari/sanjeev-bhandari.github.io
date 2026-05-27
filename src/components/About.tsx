@@ -51,7 +51,7 @@ const About = () => {
             transition={{ duration: 0.6 }}
             className="flex items-center gap-4 mb-4"
           >
-            <span className="label-pill">About</span>
+            <span className="label-pill font-mono">~/about $</span>
             <div className="flex-1 h-px" style={{ background: 'rgba(251,146,60,0.15)' }} />
           </motion.div>
           <h2
@@ -174,52 +174,66 @@ const About = () => {
             {/* Tech stack */}
             <div className="card-dark rounded-2xl p-6">
               <div className="flex items-center gap-3 mb-5">
-                <div
-                  className="w-8 h-8 rounded-lg flex items-center justify-center"
-                  style={{ background: 'linear-gradient(135deg, #0891b2, #0e7490)' }}
-                >
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center"
+                  style={{ background: 'linear-gradient(135deg, #ea580c, #9333ea)' }}>
                   <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
                   </svg>
                 </div>
-                <h3 className="text-sm font-bold text-white" style={{ fontFamily: 'Space Grotesk' }}>Tech Stack</h3>
+                <h3 className="text-sm font-bold text-white font-mono">$ ls tech-stack/</h3>
               </div>
               <div className="flex flex-wrap gap-2">
                 {skills_flat.map((skill, i) => (
-                  <motion.span
-                    key={skill}
-                    initial={{ opacity: 0 }}
-                    animate={inView ? { opacity: 1 } : {}}
+                  <motion.span key={skill}
+                    initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
                     transition={{ delay: 0.6 + i * 0.04 }}
-                    className="text-xs px-2.5 py-1 rounded-full font-mono"
-                    style={{
-                      background: 'rgba(6,182,212,0.07)',
-                      border: '1px solid rgba(6,182,212,0.15)',
-                      color: 'rgba(253,186,116,0.8)',
-                    }}
-                  >
+                    className="text-xs px-2.5 py-1 rounded-md font-mono"
+                    style={{ background: 'rgba(251,146,60,0.07)', border: '1px solid rgba(251,146,60,0.14)', color: 'rgba(253,186,116,0.75)' }}>
                     {skill}
                   </motion.span>
                 ))}
               </div>
             </div>
 
-            {/* Technical Skills list */}
-            <div className="card-dark rounded-2xl p-6 space-y-4">
-              {(SKILLS[1].items as { name: string; value: string }[]).map((skill, i) => (
-                <motion.div
-                  key={skill.name}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={inView ? { opacity: 1, x: 0 } : {}}
-                  transition={{ delay: 0.7 + i * 0.08 }}
-                >
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs font-semibold" style={{ color: 'rgba(255,255,255,0.7)' }}>{skill.name}</span>
-                  </div>
-                  <p className="text-xs font-mono" style={{ color: 'rgba(255,255,255,0.3)' }}>{skill.value}</p>
-                </motion.div>
-              ))}
-            </div>
+            {/* profile.json terminal block */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.7, delay: 0.8 }}
+              className="rounded-2xl overflow-hidden"
+              style={{ background: 'rgba(12,10,8,0.9)', border: '1px solid rgba(251,146,60,0.12)', boxShadow: '0 0 30px rgba(234,88,12,0.04)' }}
+            >
+              {/* terminal title bar */}
+              <div className="flex items-center gap-2 px-4 py-2.5" style={{ background: 'rgba(255,255,255,0.02)', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                <div className="flex gap-1.5">
+                  {['#ff5f57','#febc2e','#28c840'].map((c,i) => <div key={i} className="w-2.5 h-2.5 rounded-full" style={{ background: c, opacity: 0.65 }} />)}
+                </div>
+                <span className="text-[10px] font-mono ml-2" style={{ color: 'rgba(255,255,255,0.2)' }}>profile.json</span>
+              </div>
+              {/* json content */}
+              <div className="p-4 font-mono text-xs leading-6">
+                <div style={{ color: 'rgba(255,255,255,0.35)' }}>{'{'}</div>
+                {[
+                  { key: '"name"',     val: '"Sanjeev Bhandari"',            color: '#fde68a' },
+                  { key: '"role"',     val: '"ML Engineer"',                  color: '#fde68a' },
+                  { key: '"location"', val: '"Kathmandu, Nepal 🇳🇵"',        color: '#fde68a' },
+                  { key: '"focus"',    val: '["LLMs", "RAG", "Vision"]',      color: '#fb923c' },
+                  { key: '"company"',  val: '"TAI Inc."',                     color: '#fde68a' },
+                  { key: '"status"',   val: '"open to opportunities ✓"',      color: '#34d399' },
+                ].map((line, i) => (
+                  <motion.div key={line.key}
+                    initial={{ opacity: 0, x: -8 }} animate={inView ? { opacity: 1, x: 0 } : {}}
+                    transition={{ delay: 0.9 + i * 0.07 }}
+                    className="pl-4">
+                    <span style={{ color: '#e879f9' }}>{line.key}</span>
+                    <span style={{ color: 'rgba(255,255,255,0.25)' }}>: </span>
+                    <span style={{ color: line.color }}>{line.val}</span>
+                    {i < 5 && <span style={{ color: 'rgba(255,255,255,0.2)' }}>,</span>}
+                  </motion.div>
+                ))}
+                <div style={{ color: 'rgba(255,255,255,0.35)' }}>{'}'}</div>
+              </div>
+            </motion.div>
           </motion.div>
         </div>
       </div>

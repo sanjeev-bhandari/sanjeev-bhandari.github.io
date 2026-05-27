@@ -50,7 +50,8 @@ const BackToTop = ({ visible }: { visible: boolean }) => (
 );
 
 const Index = () => {
-  const [loaded, setLoaded] = useState(false);
+  const skipLoading = new URLSearchParams(window.location.search).has('preview');
+  const [loaded, setLoaded] = useState(skipLoading);
   const [scrollPct, setScrollPct] = useState(0);
   const [showBackTop, setShowBackTop] = useState(false);
 
@@ -71,9 +72,9 @@ const Index = () => {
   return (
     <div
       className="noise min-h-screen relative"
-      style={{ background: '#030012' }}
+      style={{ background: '#0c0b09' }}
     >
-      <LoadingScreen onComplete={onLoadComplete} />
+      {!skipLoading && <LoadingScreen onComplete={onLoadComplete} />}
 
       {loaded && (
         <>

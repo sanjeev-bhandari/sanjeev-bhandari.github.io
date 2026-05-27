@@ -19,7 +19,7 @@ const Experience = () => {
             transition={{ duration: 0.6 }}
             className="flex items-center gap-4 mb-4"
           >
-            <span className="label-pill">Journey</span>
+            <span className="label-pill font-mono">~/experience $</span>
             <div className="flex-1 h-px" style={{ background: 'rgba(251,146,60,0.12)' }} />
           </motion.div>
           <h2

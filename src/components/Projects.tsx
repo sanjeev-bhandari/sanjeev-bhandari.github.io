@@ -28,7 +28,7 @@ const Projects = () => {
             transition={{ duration: 0.6 }}
             className="flex items-center gap-4 mb-4"
           >
-            <span className="label-pill">Projects</span>
+            <span className="label-pill font-mono">~/projects $</span>
             <div className="flex-1 h-px" style={{ background: 'rgba(251,146,60,0.12)' }} />
           </motion.div>
           <h2

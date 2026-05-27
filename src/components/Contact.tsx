@@ -86,7 +86,7 @@ const Contact = () => {
             transition={{ duration: 0.6 }}
             className="flex items-center justify-center gap-3 mb-6"
           >
-            <span className="label-pill">Contact</span>
+            <span className="label-pill font-mono">~/contact $</span>
           </motion.div>
           <h2
             className="text-4xl md:text-6xl lg:text-8xl font-black text-white tracking-tight leading-[0.9] mb-6"
